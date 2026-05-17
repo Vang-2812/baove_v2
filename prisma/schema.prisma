@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────
+// AUTH
+// ─────────────────────────────────────────
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  password   String
+  name       String
+  role       Role     @default(VIEWER)
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  posts      Post[]
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+// ─────────────────────────────────────────
+// SERVICES
+// ─────────────────────────────────────────
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String // markdown/richtext
+  scope       String? // phạm vi cung cấp (markdown)
+  process     String? // quy trình (JSON array of steps)
+  benefits    String? // lợi ích (markdown)
+  icon        String? // tên lucide icon hoặc URL ảnh icon
+  image       String? // URL ảnh banner
+  price_min   Float?
+  price_max   Float?
+  price_unit  String?  @default("tháng")
+  faq         String? // JSON array [{q, a}]
+  order       Int      @default(0)
+  is_active   Boolean  @default(true)
+  meta_title  String?
+  meta_desc   String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────
+// POSTS (Blog & Tài liệu)
+// ─────────────────────────────────────────
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  parent_id String?
+  type      PostType @default(BLOG)
+  order     Int      @default(0)
+  posts     Post[]
+}
+
+enum PostType {
+  BLOG
+  DOCUMENT
+}
+
+model Post {
+  id           String     @id @default(cuid())
+  title        String
+  slug         String     @unique
+  content      String // HTML hoặc markdown
+  excerpt      String?
+  thumbnail    String?
+  type         PostType   @default(BLOG)
+  category_id  String?
+  category     Category?  @relation(fields: [category_id], references: [id])
+  author_id    String?
+  author       User?      @relation(fields: [author_id], references: [id])
+  status       PostStatus @default(DRAFT)
+  published_at DateTime?
+  view_count   Int        @default(0)
+  meta_title   String?
+  meta_desc    String?
+  tags         String[] // array of tag strings
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+}
+
+// ─────────────────────────────────────────
+// RECRUITMENT
+// ─────────────────────────────────────────
+model Job {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  description  String // mô tả công việc (richtext)
+  requirements String // yêu cầu ứng viên (richtext)
+  benefits     String // quyền lợi (richtext)
+  location     String // vd: "TP.HCM, Đồng Nai"
+  salary_range String? // vd: "12-15 triệu"
+  type         JobType       @default(FULLTIME)
+  status       JobStatus     @default(OPEN)
+  meta_title   String?
+  meta_desc    String?
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  applications Application[]
+}
+
+enum JobType {
+  FULLTIME
+  PARTTIME
+  CONTRACT
+}
+
+enum JobStatus {
+  OPEN
+  PAUSED
+  CLOSED
+}
+
+model Application {
+  id                 String    @id @default(cuid())
+  job_id             String
+  job                Job       @relation(fields: [job_id], references: [id])
+  name               String
+  phone              String
+  email              String
+  cv_file            String? // URL file CV
+  experience_years   Int?
+  preferred_location String?
+  note               String?
+  status             AppStatus @default(NEW)
+  created_at         DateTime  @default(now())
+}
+
+enum AppStatus {
+  NEW
+  REVIEWING
+  ACCEPTED
+  REJECTED
+}
+
+// ─────────────────────────────────────────
+// LEADS (Form Liên Hệ & Báo Giá)
+// ─────────────────────────────────────────
+model Contact {
+  id           String     @id @default(cuid())
+  name         String
+  phone        String
+  email        String?
+  province     String? // tỉnh/thành phố
+  service_type String? // loại dịch vụ quan tâm
+  title        String? // tiêu đề / chủ đề
+  message      String
+  source       String? // "homepage_form" | "service_page" | "contact_page"
+  status       LeadStatus @default(NEW)
+  handled_by   String?
+  handled_at   DateTime?
+  note         String? // ghi chú nội bộ
+  created_at   DateTime   @default(now())
+}
+
+enum LeadStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+// ─────────────────────────────────────────
+// PARTNERS & TESTIMONIALS
+// ─────────────────────────────────────────
+model Partner {
+  id         String   @id @default(cuid())
+  name       String
+  logo       String // URL ảnh logo
+  website    String?
+  order      Int      @default(0)
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  client_name String
+  position    String? // chức vụ
+  company     String? // tên công ty
+  logo        String? // logo công ty
+  content     String
+  rating      Int?     @default(5) // 1-5
+  order       Int      @default(0)
+  is_active   Boolean  @default(true)
+  created_at  DateTime @default(now())
+}
+
+// ─────────────────────────────────────────
+// BRANCHES
+// ─────────────────────────────────────────
+model Branch {
+  id            String  @id @default(cuid())
+  name          String
+  address       String
+  phone         String
+  email         String?
+  map_embed_url String? // Google Maps embed URL
+  province      String // vd: "tphcm" | "hanoi" | "danang"
+  is_main       Boolean @default(false)
+  order         Int     @default(0)
+}
+
+// ─────────────────────────────────────────
+// SITE SETTINGS
+// ─────────────────────────────────────────
+model Setting {
+  key   String @id
+  value String // JSON string
+}
