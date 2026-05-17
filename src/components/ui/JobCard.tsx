@@ -23,7 +23,7 @@ export function JobCard({ job }: JobCardProps) {
       : 'Hợp đồng'
 
   return (
-    <div className="group bg-secondary-light/10 border border-white/5 p-6 rounded-2xl flex flex-col justify-between hover:border-primary/20 hover:bg-secondary-light/20 transition-all duration-300 relative text-left">
+    <div className="group bg-secondary-light/30 border border-white/10 p-6 rounded-2xl flex flex-col justify-between hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 relative text-left shadow-xl shadow-black/10">
       <div className="space-y-4">
         {/* Badges */}
         <div className="flex justify-between items-center">
@@ -41,7 +41,7 @@ export function JobCard({ job }: JobCardProps) {
         </h3>
 
         {/* Info Tags */}
-        <div className="space-y-2 pt-2 border-t border-white/5">
+        <div className="space-y-2 pt-2 border-t border-white/10">
           <div className="flex items-center gap-2 text-xs text-gray-400 font-light">
             <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
             <span className="line-clamp-1">{job.location}</span>
@@ -60,7 +60,7 @@ export function JobCard({ job }: JobCardProps) {
       </div>
 
       {/* Action CTA */}
-      <div className="pt-6 mt-4 flex items-center justify-between border-t border-white/5">
+      <div className="pt-6 mt-4 flex items-center justify-between border-t border-white/10">
         <Link
           href={`/tuyen-dung/${job.slug}`}
           className="text-xs font-bold text-primary group-hover:text-primary-dark transition-colors flex items-center gap-1 border-b border-primary/10 group-hover:border-primary pb-0.5"

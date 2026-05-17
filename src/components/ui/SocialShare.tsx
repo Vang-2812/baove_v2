@@ -38,7 +38,7 @@ export function SocialShare({ url, title }: SocialShareProps) {
   }
 
   return (
-    <div className="py-6 border-t border-b border-white/5 flex flex-wrap items-center justify-between gap-4 mt-12 bg-secondary-light/5 px-6 rounded-2xl">
+    <div className="py-6 border-t border-b border-white/10 flex flex-wrap items-center justify-between gap-4 mt-12 bg-secondary-light/20 px-6 rounded-2xl">
       <div className="flex items-center gap-2">
         <Share2 className="w-4 h-4 text-primary" />
         <span className="text-xs font-bold text-white uppercase tracking-wider">Chia sẻ bài viết:</span>
@@ -70,7 +70,7 @@ export function SocialShare({ url, title }: SocialShareProps) {
           className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-xs font-semibold transition-all duration-200 ${
             copied
               ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-              : 'bg-secondary-light/10 border-white/5 hover:border-white/10 text-gray-400 hover:text-white'
+              : 'bg-secondary-light/30 border-white/10 hover:border-white/20 text-gray-400 hover:text-white'
           }`}
         >
           {copied ? (

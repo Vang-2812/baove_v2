@@ -6,6 +6,8 @@ import prisma from '@/lib/db'
 import { PageHero } from '@/components/ui/PageHero'
 import { FileText, ArrowRight, ShieldCheck, Flame, HeartPulse, LifeBuoy } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Kho Tài Liệu Nghiệp Vụ Bảo Vệ | Long Việt Security',
   description: 'Kho lưu trữ tài liệu huấn luyện nghiệp vụ an ninh bảo vệ, sổ tay phòng cháy chữa cháy, cẩm nang sơ cấp cứu và kỹ thuật cứu hộ cứu nạn chuyên nghiệp.',
@@ -29,6 +31,9 @@ function getCategoryIcon(slug: string) {
 }
 
 export default async function DocumentsPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_documents || 'Hệ thống quy chuẩn huấn luyện, sổ tay kỹ năng an toàn và phòng chống rủi ro'
+
   // Fetch document categories
   const categories = await prisma.category.findMany({
     where: { type: 'DOCUMENT' },
@@ -59,7 +64,7 @@ export default async function DocumentsPage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Kho Tài Liệu Nghiệp Vụ"
-        subtitle="Hệ thống quy chuẩn huấn luyện, sổ tay kỹ năng an toàn và phòng chống rủi ro"
+        subtitle={pageSubtitle}
       />
 
       <section className="py-16 md:py-24 relative overflow-hidden">
@@ -97,7 +102,7 @@ export default async function DocumentsPage() {
                     {catPosts.map((post: any) => (
                       <div
                         key={post.id}
-                        className="group relative bg-secondary-light/10 border border-white/5 rounded-2xl p-6 flex flex-col justify-between hover:border-primary/20 hover:bg-secondary-light/20 transition-all duration-300 backdrop-blur-md"
+                        className="group relative bg-secondary-light/30 border border-white/10 rounded-2xl p-6 flex flex-col justify-between hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 backdrop-blur-md shadow-xl shadow-black/10"
                       >
                         <div className="space-y-4">
                           {/* File logo & metadata */}
@@ -124,7 +129,7 @@ export default async function DocumentsPage() {
                         </div>
 
                         {/* Read link */}
-                        <div className="pt-5 mt-5 border-t border-white/5 flex items-center justify-between">
+                        <div className="pt-5 mt-5 border-t border-white/10 flex items-center justify-between">
                           <span className="text-[10px] text-gray-500 font-light">
                             Lượt xem: {post.view_count}
                           </span>

@@ -279,7 +279,7 @@ export default async function DocumentDetailPage({ params }: PageProps) {
             <SocialShare url={currentUrl} title={post.title} />
 
             {/* Bottom Nav */}
-            <div className="pt-6 border-t border-white/5 flex">
+            <div className="pt-6 border-t border-white/10 flex">
               <Link
                 href="/tai-lieu"
                 className="text-xs font-bold text-gray-400 hover:text-primary transition-colors flex items-center gap-2 group"
@@ -300,7 +300,7 @@ export default async function DocumentDetailPage({ params }: PageProps) {
 
               {/* Related Documents Widget */}
               {relatedDocs.length > 0 && (
-                <div className="bg-secondary-light/10 border border-white/5 rounded-2xl p-6 space-y-4">
+                <div className="bg-secondary-light/30 border border-white/10 rounded-2xl p-6 space-y-4 shadow-xl shadow-black/10">
                   <h3 className="font-heading font-bold text-sm text-white border-l-2 border-primary pl-2 uppercase tracking-wider">
                     Cùng Chuyên Mục
                   </h3>

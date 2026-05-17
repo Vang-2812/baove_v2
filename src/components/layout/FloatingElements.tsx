@@ -18,9 +18,17 @@ function ZaloIconSvg({ className }: { className?: string }) {
   )
 }
 
-export function FloatingElements() {
+export interface FloatingElementsProps {
+  settings?: Record<string, any>
+}
+
+export function FloatingElements({ settings = {} }: FloatingElementsProps) {
   const [showBackToTop, setShowBackToTop] = React.useState(false)
   const [isZaloLoaded, setIsZaloLoaded] = React.useState(false)
+
+  const hotline = settings.company_hotline || '0923 840 999'
+  const hotlineTel = hotline.replace(/\s+/g, '')
+  const zaloUrl = settings.zalo_url || 'https://zalo.me/0923840999'
 
   // Track scrolling to show/hide Back to Top button
   React.useEffect(() => {
@@ -61,7 +69,7 @@ export function FloatingElements() {
     <>
       {/* 1. Bouncing Floating Phone Button (Mobile Only, md:hidden) */}
       <a
-        href="tel:0923840999"
+        href={`tel:${hotlineTel}`}
         className="md:hidden fixed bottom-20 right-4 z-50 bg-primary text-white rounded-full p-4 shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-150 animate-bounce"
         aria-label="Call Hotline"
       >
@@ -71,7 +79,7 @@ export function FloatingElements() {
       {/* 2. Zalo Chat Widget (Lazy loaded, both desktop and mobile) */}
       {isZaloLoaded && (
         <a
-          href="https://zalo.me/0923840999"
+          href={zaloUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-4 right-4 z-50 w-14 h-14 bg-[#0068ff] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-200"

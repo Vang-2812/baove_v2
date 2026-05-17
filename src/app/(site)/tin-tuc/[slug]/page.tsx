@@ -256,7 +256,7 @@ export default async function BlogPostDetailPage({ params }: PageProps) {
 
             {/* Thumbnail Banner Image */}
             {post.thumbnail && (
-              <div className="relative w-full h-[280px] md:h-[450px] rounded-2xl overflow-hidden bg-secondary-light/10 shadow-xl shadow-black/30 border border-white/5">
+              <div className="relative w-full h-[280px] md:h-[450px] rounded-2xl overflow-hidden bg-secondary-light/30 shadow-xl shadow-black/30 border border-white/10">
                 <Image
                   src={post.thumbnail}
                   alt={post.title}
@@ -290,7 +290,7 @@ export default async function BlogPostDetailPage({ params }: PageProps) {
             <SocialShare url={currentUrl} title={post.title} />
 
             {/* Bottom Nav: Back to news index */}
-            <div className="pt-6 border-t border-white/5 flex">
+            <div className="pt-6 border-t border-white/10 flex">
               <Link
                 href="/tin-tuc"
                 className="text-xs font-bold text-gray-400 hover:text-primary transition-colors flex items-center gap-2 group"
@@ -310,7 +310,7 @@ export default async function BlogPostDetailPage({ params }: PageProps) {
                   {relatedPosts.map((rp: any) => (
                     <div
                       key={rp.id}
-                      className="group bg-secondary-light/10 border border-white/5 p-4 rounded-xl space-y-3 hover:border-primary/20 transition-all duration-300 flex flex-col justify-between"
+                      className="group bg-secondary-light/30 border border-white/10 p-4 rounded-xl space-y-3 hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 flex flex-col justify-between shadow-xl shadow-black/10"
                     >
                       <div className="space-y-2">
                         {rp.thumbnail && (
@@ -356,11 +356,11 @@ export default async function BlogPostDetailPage({ params }: PageProps) {
               <QuoteFormCard serviceType="Tư Vấn An Ninh Tin Tức" />
 
               {/* Sidebar Recent blogs */}
-              <div className="bg-secondary-light/10 border border-white/5 rounded-2xl p-6 space-y-4">
+              <div className="bg-secondary-light/30 border border-white/10 rounded-2xl p-6 space-y-4 shadow-xl shadow-black/10">
                 <h3 className="font-heading font-bold text-sm text-white border-l-2 border-primary pl-2 uppercase tracking-wider">
                   Bài Viết Mới Nhất
                 </h3>
-                <div className="space-y-4 divide-y divide-white/5">
+                <div className="space-y-4 divide-y divide-white/10">
                   {recentPosts.map((rp: any, idx: number) => (
                     <div key={rp.id} className={`pt-4 first:pt-0 flex gap-3 ${idx === 0 ? '' : 'pt-4'}`}>
                       {rp.thumbnail && (

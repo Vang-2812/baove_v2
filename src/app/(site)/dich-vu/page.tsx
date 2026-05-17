@@ -5,6 +5,8 @@ import { PageHero } from '@/components/ui/PageHero'
 import { ServiceCard } from '@/components/ui/ServiceCard'
 import { QuoteSection } from '@/components/sections/QuoteSection'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Dịch Vụ Bảo Vệ Chuyên Nghiệp | Long Việt Security',
   description: '12 loại dịch vụ bảo vệ chuyên nghiệp trọn gói: nhà máy, tòa nhà, ngân hàng, sự kiện... Đội ngũ kỷ luật, an toàn tuyệt đối. Báo giá miễn phí: 0923 840 999.',
@@ -14,6 +16,9 @@ export const metadata: Metadata = {
 }
 
 export default async function ServicesPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_services || 'Giải pháp an ninh toàn diện, tinh nhuệ và an toàn tuyệt đối cho mọi nhu cầu khách hàng trên toàn quốc.'
+
   // Fetch active services directly from database
   const services = await prisma.service.findMany({
     where: {
@@ -32,7 +37,7 @@ export default async function ServicesPage() {
     <div className="bg-secondary-dark min-h-screen">
       <PageHero
         title="Dịch Vụ Bảo Vệ Chuyên Nghiệp"
-        subtitle="Giải pháp an ninh toàn diện, tinh nhuệ và an toàn tuyệt đối cho mọi nhu cầu khách hàng trên toàn quốc."
+        subtitle={pageSubtitle}
         breadcrumb={breadcrumb}
       />
 

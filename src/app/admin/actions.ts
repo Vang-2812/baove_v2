@@ -232,6 +232,14 @@ export async function saveSettings(settings: Record<string, any>) {
     revalidatePath('/')
     revalidatePath('/lien-he')
     revalidatePath('/gioi-thieu')
+    revalidatePath('/gioi-thieu/su-khac-biet')
+    revalidatePath('/gioi-thieu/tam-nhin-su-menh')
+    revalidatePath('/gioi-thieu/co-cau-to-chuc')
+    revalidatePath('/gioi-thieu/qua-trinh-hinh-thanh')
+    revalidatePath('/hop-tac')
+    revalidatePath('/tai-lieu')
+    revalidatePath('/tin-tuc')
+    revalidatePath('/tuyen-dung')
     revalidatePath('/admin/settings')
     return { success: true }
   } catch (error: any) {

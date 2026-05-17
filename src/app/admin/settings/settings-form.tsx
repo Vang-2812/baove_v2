@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Save, Info, BarChart2, Share2, MapPin, Edit, RefreshCw, HelpCircle } from 'lucide-react'
+import { Save, Info, BarChart2, Share2, MapPin, Edit, RefreshCw, HelpCircle, Globe, Home, FileText } from 'lucide-react'
 import { saveSettings, updateBranch } from '../actions'
 
 interface SettingsFormProps {
@@ -10,7 +10,7 @@ interface SettingsFormProps {
 }
 
 export function SettingsForm({ initialSettings, branches: initialBranches }: SettingsFormProps) {
-  const [activeTab, setActiveTab] = React.useState<'info' | 'stats' | 'social' | 'branches'>('info')
+  const [activeTab, setActiveTab] = React.useState<'info' | 'seo' | 'home' | 'pages' | 'stats' | 'social' | 'branches'>('info')
   const [status, setStatus] = React.useState<'idle' | 'saving' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = React.useState('')
 
@@ -19,6 +19,32 @@ export function SettingsForm({ initialSettings, branches: initialBranches }: Set
   const [companyHotline, setCompanyHotline] = React.useState(initialSettings.company_hotline || '0923 840 999')
   const [companyEmail, setCompanyEmail] = React.useState(initialSettings.company_email || 'info@baovelongviet.vn')
   const [companyAddress, setCompanyAddress] = React.useState(initialSettings.company_address || 'B23 Khu Dân Cư Nam Long, Phú Thuận, Quận 7, TP. HCM')
+
+  // SEO & Web Name
+  const [siteName, setSiteName] = React.useState(initialSettings.site_name || 'Long Việt Security')
+  const [metaTitle, setMetaTitle] = React.useState(initialSettings.meta_title || 'Bảo Vệ Chuyên Nghiệp – An Toàn Tuyệt Đối')
+  const [metaDescription, setMetaDescription] = React.useState(initialSettings.meta_description || 'Công Ty Dịch Vụ Bảo Vệ Long Việt chuyên nghiệp, uy tín. Cung cấp dịch vụ bảo vệ nhà máy, tòa nhà, sự kiện, yếu nhân an toàn 100%. Hotline: 0923 840 999.')
+
+  // Homepage
+  const [homeHeroTitle, setHomeHeroTitle] = React.useState(initialSettings.home_hero_title || 'Dịch Vụ Bảo Vệ Chuyên Nghiệp')
+  const [homeHeroSubtitle, setHomeHeroSubtitle] = React.useState(initialSettings.home_hero_subtitle || 'An Toàn Tuyệt Đối – Kỷ Luật Thép – Phản Ứng Nhanh')
+  const [homeAboutTitle, setHomeAboutTitle] = React.useState(initialSettings.home_about_title || 'Hành Trình Hơn 15 Năm Kiến Tạo Niềm Tin & Sự An Toàn Tuyệt Đối')
+  const [homeAboutLead, setHomeAboutLead] = React.useState(initialSettings.home_about_lead || 'Thành lập từ năm 2009, Công Ty Dịch Vụ Bảo Vệ Long Việt đã khẳng định vị thế là một trong những doanh nghiệp cung cấp giải pháp an ninh chuyên nghiệp hàng đầu Việt Nam.')
+  const [homeAboutBody, setHomeAboutBody] = React.useState(initialSettings.home_about_body || 'Chúng tôi không chỉ cung cấp dịch vụ bảo vệ đơn thuần mà mang đến giải pháp an ninh toàn diện được may đo phù hợp theo từng quy mô và nhu cầu cụ thể của doanh nghiệp, giúp bạn hoàn toàn an tâm tập trung sản xuất, kinh doanh.')
+
+  // Page Subtitles
+  const [subAbout, setSubAbout] = React.useState(initialSettings.sub_about || 'Hành trình xây dựng niềm tin và nền tảng an ninh bền vững')
+  const [subVision, setSubVision] = React.useState(initialSettings.sub_vision || 'Kim chỉ nam dẫn lối mọi hành động của tập thể cán bộ chiến sĩ Long Việt Security')
+  const [subDifference, setSubDifference] = React.useState(initialSettings.sub_difference || 'Tại sao hàng nghìn doanh nghiệp lựa chọn Long Việt thay vì tự tuyển bảo vệ nội bộ?')
+  const [subHistory, setSubHistory] = React.useState(initialSettings.sub_history || 'Mốc son lịch sử đánh dấu sự trưởng thành và phát triển vượt trội của Long Việt')
+  const [subOrg, setSubOrg] = React.useState(initialSettings.sub_org || 'Đội ngũ ban lãnh đạo bản lĩnh, chuyên nghiệp điều hành hệ thống an ninh tối tân')
+  const [subPricing, setSubPricing] = React.useState(initialSettings.sub_pricing || 'Bảng báo giá các dịch vụ bảo vệ chuyên nghiệp cạnh tranh và minh bạch')
+  const [subServices, setSubServices] = React.useState(initialSettings.sub_services || 'Danh mục các giải pháp an ninh toàn diện được thiết kế chuyên biệt cho mọi ngành nghề')
+  const [subRecruitments, setSubRecruitments] = React.useState(initialSettings.sub_recruitments || 'Gia nhập đội ngũ vệ sĩ tinh nhuệ Long Việt với chế độ đãi ngộ và lộ trình thăng tiến tốt nhất')
+  const [subNews, setSubNews] = React.useState(initialSettings.sub_news || 'Cập nhật các hoạt động thực địa, thông tin sự nghiệp an ninh và kiến thức bổ ích')
+  const [subDocuments, setSubDocuments] = React.useState(initialSettings.sub_documents || 'Kho cẩm nang hướng dẫn nghiệp vụ, kỹ năng PCCC và sơ cấp cứu dành riêng cho chiến sĩ')
+  const [subCooperation, setSubCooperation] = React.useState(initialSettings.sub_cooperation || 'Hợp tác liên kết bền vững – Cộng hưởng giá trị – Kiến tạo an tâm')
+  const [subContact, setSubContact] = React.useState(initialSettings.sub_contact || 'Nhận khảo sát thực địa lỗ hổng an ninh miễn phí và tư vấn phương án tối ưu chi phí')
 
   // Stats
   const [statYears, setStatYears] = React.useState(initialSettings.stat_years || '15')
@@ -99,6 +125,29 @@ export function SettingsForm({ initialSettings, branches: initialBranches }: Set
       facebook_url: facebookUrl,
       zalo_url: zaloUrl,
       youtube_url: youtubeUrl,
+
+      site_name: siteName,
+      meta_title: metaTitle,
+      meta_description: metaDescription,
+
+      home_hero_title: homeHeroTitle,
+      home_hero_subtitle: homeHeroSubtitle,
+      home_about_title: homeAboutTitle,
+      home_about_lead: homeAboutLead,
+      home_about_body: homeAboutBody,
+
+      sub_about: subAbout,
+      sub_vision: subVision,
+      sub_difference: subDifference,
+      sub_history: subHistory,
+      sub_org: subOrg,
+      sub_pricing: subPricing,
+      sub_services: subServices,
+      sub_recruitments: subRecruitments,
+      sub_news: subNews,
+      sub_documents: subDocuments,
+      sub_cooperation: subCooperation,
+      sub_contact: subContact,
     }
 
     const res = await saveSettings(payload)
@@ -122,7 +171,34 @@ export function SettingsForm({ initialSettings, branches: initialBranches }: Set
           }`}
         >
           <Info className="w-4 h-4" />
-          <span>Thông Tin Công Ty</span>
+          <span>Thông Tin Liên Hệ</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('seo')}
+          className={`px-4 py-2.5 font-bold text-xs md:text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            activeTab === 'seo' ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-white'
+          }`}
+        >
+          <Globe className="w-4 h-4" />
+          <span>SEO & Metadata</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('home')}
+          className={`px-4 py-2.5 font-bold text-xs md:text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            activeTab === 'home' ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-white'
+          }`}
+        >
+          <Home className="w-4 h-4" />
+          <span>Giới Thiệu Trang Chủ</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('pages')}
+          className={`px-4 py-2.5 font-bold text-xs md:text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+            activeTab === 'pages' ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-white'
+          }`}
+        >
+          <FileText className="w-4 h-4" />
+          <span>Giới Thiệu Các Trang</span>
         </button>
         <button
           onClick={() => setActiveTab('stats')}
@@ -131,7 +207,7 @@ export function SettingsForm({ initialSettings, branches: initialBranches }: Set
           }`}
         >
           <BarChart2 className="w-4 h-4" />
-          <span>Thống Kê Trang Chủ</span>
+          <span>Thống Kê</span>
         </button>
         <button
           onClick={() => setActiveTab('social')}
@@ -202,6 +278,229 @@ export function SettingsForm({ initialSettings, branches: initialBranches }: Set
                     value={companyAddress}
                     onChange={(e) => setCompanyAddress(e.target.value)}
                     className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* TAB: SEO & METADATA */}
+            {activeTab === 'seo' && (
+              <div className="grid grid-cols-1 gap-6">
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-bold text-gray-300">Tên thương hiệu website (Site Name) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={siteName}
+                    onChange={(e) => setSiteName(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-bold text-gray-300">Tiêu đề SEO trang chủ (Meta Title) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={metaTitle}
+                    onChange={(e) => setMetaTitle(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-bold text-gray-300">Mô tả SEO trang chủ (Meta Description) *</label>
+                  <textarea
+                    rows={4}
+                    required
+                    value={metaDescription}
+                    onChange={(e) => setMetaDescription(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light resize-none"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* TAB: HOMEPAGE INTRO TEXTS */}
+            {activeTab === 'home' && (
+              <div className="grid grid-cols-1 gap-6">
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-bold text-gray-300">Tiêu đề biểu ngữ chính trang chủ (Hero Title) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={homeHeroTitle}
+                    onChange={(e) => setHomeHeroTitle(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-bold text-gray-300">Phụ đề biểu ngữ chính trang chủ (Hero Subtitle) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={homeHeroSubtitle}
+                    onChange={(e) => setHomeHeroSubtitle(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5 text-left border-t border-white/5 pt-6">
+                  <label className="text-xs font-bold text-gray-300">Tiêu đề phần Giới thiệu trang chủ (About Title) *</label>
+                  <input
+                    type="text"
+                    required
+                    value={homeAboutTitle}
+                    onChange={(e) => setHomeAboutTitle(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-bold text-gray-300">Đoạn tóm tắt phần Giới thiệu trang chủ (About Lead Copy) *</label>
+                  <textarea
+                    rows={3}
+                    required
+                    value={homeAboutLead}
+                    onChange={(e) => setHomeAboutLead(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light resize-none"
+                  />
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-bold text-gray-300">Nội dung chi tiết phần Giới thiệu trang chủ (About Body Copy) *</label>
+                  <textarea
+                    rows={4}
+                    required
+                    value={homeAboutBody}
+                    onChange={(e) => setHomeAboutBody(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light resize-none"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* TAB: PAGE SUBTITLES */}
+            {activeTab === 'pages' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Về Chúng Tôi (About us)</label>
+                  <input
+                    type="text"
+                    value={subAbout}
+                    onChange={(e) => setSubAbout(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Tầm Nhìn & Sứ Mệnh</label>
+                  <input
+                    type="text"
+                    value={subVision}
+                    onChange={(e) => setSubVision(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Sự Khác Biệt</label>
+                  <input
+                    type="text"
+                    value={subDifference}
+                    onChange={(e) => setSubDifference(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Quá Trình Hình Thành</label>
+                  <input
+                    type="text"
+                    value={subHistory}
+                    onChange={(e) => setSubHistory(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Cơ Cấu Tổ Chức</label>
+                  <input
+                    type="text"
+                    value={subOrg}
+                    onChange={(e) => setSubOrg(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Xem Bảng Giá</label>
+                  <input
+                    type="text"
+                    value={subPricing}
+                    onChange={(e) => setSubPricing(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu danh mục Dịch Vụ</label>
+                  <input
+                    type="text"
+                    value={subServices}
+                    onChange={(e) => setSubServices(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Tuyển Dụng</label>
+                  <input
+                    type="text"
+                    value={subRecruitments}
+                    onChange={(e) => setSubRecruitments(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Tin Tức</label>
+                  <input
+                    type="text"
+                    value={subNews}
+                    onChange={(e) => setSubNews(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Thư Viện Tài Liệu</label>
+                  <input
+                    type="text"
+                    value={subDocuments}
+                    onChange={(e) => setSubDocuments(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Hợp Tác</label>
+                  <input
+                    type="text"
+                    value={subCooperation}
+                    onChange={(e) => setSubCooperation(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-gray-300">Lời giới thiệu trang Liên Hệ</label>
+                  <input
+                    type="text"
+                    value={subContact}
+                    onChange={(e) => setSubContact(e.target.value)}
+                    className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-primary/50 transition-all font-light"
                   />
                 </div>
               </div>

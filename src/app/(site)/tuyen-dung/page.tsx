@@ -5,6 +5,8 @@ import { PageHero } from '@/components/ui/PageHero'
 import { JobBoard } from '@/components/recruitment/JobBoard'
 import { Trophy, Gift, HeartPulse, Award, ShieldCheck, Clock, CheckCircle2 } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Tuyển Dụng Nhân Viên Bảo Vệ Lương Cao | Long Việt Security',
   description: 'Tuyển dụng nhân viên bảo vệ, vệ sĩ trên toàn quốc. Lương 8-25 triệu/tháng, đóng BHXH đầy đủ, miễn phí nhà ở nội trú, hỗ trợ đào tạo nghiệp vụ. Ứng tuyển ngay!',
@@ -14,6 +16,9 @@ export const metadata: Metadata = {
 }
 
 export default async function RecruitmentPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_recruitment || 'Gia nhập lực lượng vệ sĩ Long Việt – Thu nhập ổn định – Tương lai vững vàng'
+
   // Fetch active jobs (status=OPEN)
   const jobs = await prisma.job.findMany({
     where: {
@@ -51,7 +56,7 @@ export default async function RecruitmentPage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Cơ Hội Nghề Nghiệp"
-        subtitle="Gia nhập lực lượng vệ sĩ Long Việt – Thu nhập ổn định – Tương lai vững vàng"
+        subtitle={pageSubtitle}
       />
 
       {/* Benefits Section */}
@@ -77,7 +82,7 @@ export default async function RecruitmentPage() {
             {benefits.map((benefit, idx) => (
               <div
                 key={idx}
-                className="group bg-secondary-light/10 border border-white/5 p-6 md:p-8 rounded-3xl space-y-4 hover:border-primary/20 hover:bg-secondary-light/20 transition-all duration-300 backdrop-blur-md"
+                className="group bg-secondary-light/30 border border-white/10 p-6 md:p-8 rounded-3xl space-y-4 hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 backdrop-blur-md shadow-xl shadow-black/10"
               >
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-200 shrink-0">
                   {benefit.icon}
@@ -122,7 +127,7 @@ export default async function RecruitmentPage() {
       {/* General Requirements & Hotline section */}
       <section className="py-16 bg-secondary-dark border-t border-white/5 relative">
         <div className="container mx-auto px-4 max-w-5xl relative z-10">
-          <div className="bg-secondary-light/10 border border-white/5 p-8 md:p-12 rounded-3xl backdrop-blur-md grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="bg-secondary-light/30 border border-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-md grid grid-cols-1 md:grid-cols-2 gap-8 items-center shadow-xl shadow-black/10">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-primary shrink-0" />

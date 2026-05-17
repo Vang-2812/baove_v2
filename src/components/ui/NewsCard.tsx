@@ -37,7 +37,7 @@ export function NewsCard({ post }: PostCardProps) {
     : `/tai-lieu/${post.slug}`
 
   return (
-    <article className="group relative bg-secondary-light/10 border border-white/5 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-primary/20 hover:bg-secondary-light/20 transition-all duration-300 backdrop-blur-md">
+    <article className="group relative bg-secondary-light/30 border border-white/10 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 backdrop-blur-md shadow-xl shadow-black/10">
       {/* Decorative top border active gradient */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       
@@ -100,7 +100,7 @@ export function NewsCard({ post }: PostCardProps) {
       </div>
 
       {/* Readmore Footer */}
-      <div className="px-6 pb-6 pt-2 border-t border-white/5 flex items-center justify-between">
+      <div className="px-6 pb-6 pt-2 border-t border-white/10 flex items-center justify-between">
         {post.author && (
           <div className="flex items-center gap-2 text-xs text-gray-400 font-light">
             <User className="w-3.5 h-3.5 text-primary/70" />

@@ -85,7 +85,7 @@ export function JobBoard({ initialJobs }: JobBoardProps) {
   return (
     <div className="space-y-8">
       {/* Search & Filter Toolbar */}
-      <div className="bg-secondary-light/10 border border-white/5 p-6 rounded-3xl backdrop-blur-md space-y-4">
+      <div className="bg-secondary-light/30 border border-white/10 p-6 rounded-3xl backdrop-blur-md space-y-4 shadow-xl shadow-black/10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search bar */}
           <div className="relative">

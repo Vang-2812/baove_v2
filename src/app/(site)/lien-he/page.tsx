@@ -4,6 +4,8 @@ import { PageHero } from '@/components/ui/PageHero'
 import { QuoteFormInline } from '@/components/forms/QuoteFormInline'
 import { MapPin, Phone, Mail, Clock, ShieldCheck, HeartHandshake } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Liên Hệ Long Việt Security | Khảo Sát Phương Án 24/7',
   description: 'Liên hệ ngay với Long Việt Security qua Hotline: 0923 840 999 để nhận tư vấn và khảo sát phương án bảo vệ miễn phí trên toàn quốc.',
@@ -12,21 +14,28 @@ export const metadata: Metadata = {
   },
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getSystemSettings()
+  
+  const pageSubtitle = settings.sub_contact || 'Hệ thống chi nhánh hỗ trợ toàn quốc – Luôn sẵn sàng lắng nghe và bảo vệ bạn 24/7'
+  const address = settings.company_address || 'B23, Khu dân cư Nam Long, Phường Thạnh Lộc, Quận 12, TP. Hồ Chí Minh'
+  const hotline = settings.company_hotline || '0923 840 999'
+  const email = settings.company_email || 'info@baovelongviet.vn'
+
   const contactInfo = [
     {
       title: 'Trụ Sở Chính (TP.HCM)',
-      desc: 'B23, Khu dân cư Nam Long, Phường Thạnh Lộc, Quận 12, TP. Hồ Chí Minh',
+      desc: address,
       icon: <MapPin className="w-5 h-5 text-primary" />,
     },
     {
       title: 'Đường Dây Nóng 24/7',
-      desc: 'Hotline: 0923 840 999 - Điện thoại: 028 3600 2345',
+      desc: `Hotline: ${hotline}`,
       icon: <Phone className="w-5 h-5 text-primary" />,
     },
     {
       title: 'Hòm Thư Điện Tử',
-      desc: 'info@baovelongviet.vn - cskh@baovelongviet.vn',
+      desc: email,
       icon: <Mail className="w-5 h-5 text-primary" />,
     },
     {
@@ -40,7 +49,7 @@ export default function ContactPage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Liên Hệ Với Chúng Tôi"
-        subtitle="Hệ thống chi nhánh hỗ trợ toàn quốc – Luôn sẵn sàng lắng nghe và bảo vệ bạn 24/7"
+        subtitle={pageSubtitle}
       />
 
       <section className="py-16 md:py-24 relative overflow-hidden">
@@ -71,7 +80,7 @@ export default function ContactPage() {
                 {contactInfo.map((info, idx) => (
                   <div
                     key={idx}
-                    className="bg-secondary-light/10 border border-white/5 p-6 rounded-2xl space-y-3 hover:border-primary/20 transition-all duration-300 backdrop-blur-md"
+                    className="bg-secondary-light/30 border border-white/10 p-6 rounded-2xl space-y-3 hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 backdrop-blur-md shadow-xl shadow-black/10"
                   >
                     <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                       {info.icon}
@@ -84,9 +93,9 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              <div className="rounded-3xl overflow-hidden border border-white/5 shadow-2xl h-[300px] bg-secondary-light/10 relative">
+              <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl h-[300px] bg-secondary-light/30 relative">
                 <iframe
-                  src="https://maps.google.com/maps?q=B23%20KDC%20Nam%20Long,%20Th%E1%BA%A1nh%20L%E1%BB%99c,%20Qu%E1%BA%ADn%2012,%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  src="https://www.google.com/maps?q=B23+KDC+Nam+Long,Thạnh+Lộc,Quận+12,TP.Hồ+Chí+Minh&z=16&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}
@@ -98,7 +107,7 @@ export default function ContactPage() {
             </div>
 
             {/* RIGHT COLUMN: CONSULTATION FORM CONTAINER */}
-            <div className="bg-secondary-light/20 border border-white/5 p-6 md:p-10 rounded-3xl backdrop-blur-md shadow-2xl relative">
+            <div className="bg-secondary-light/40 border border-white/10 p-6 md:p-10 rounded-3xl backdrop-blur-md shadow-2xl relative shadow-xl shadow-black/10">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
               
               <div className="space-y-4 mb-8">

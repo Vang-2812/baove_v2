@@ -8,18 +8,21 @@ import { WhyUsSection } from '@/components/sections/WhyUsSection'
 import { WorkProcess } from '@/components/sections/WorkProcess'
 import { BenefitsTab } from '@/components/sections/BenefitsTab'
 import { QuoteSection } from '@/components/sections/QuoteSection'
+import { getSystemSettings } from '@/lib/settings'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const settings = await getSystemSettings()
+
   return (
     <main className="w-full">
       {/* Section 1: Hero Carousel Banner */}
-      <HeroBanner />
+      <HeroBanner settings={settings} />
 
       {/* Section 2: Về Công Ty / Giới thiệu */}
-      <AboutSection />
+      <AboutSection settings={settings} />
 
       {/* Section 3: Con Số Nổi Bật / Scroll count */}
-      <StatsSection />
+      <StatsSection settings={settings} />
 
       {/* Section 4: Danh Mục Dịch Vụ Nổi Bật */}
       <ServiceGrid />

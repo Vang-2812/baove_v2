@@ -82,31 +82,40 @@ function CounterItem({ icon, targetValue, suffix = '', label }: StatItemProps) {
   )
 }
 
-export function StatsSection() {
+export interface StatsSectionProps {
+  settings?: Record<string, any>
+}
+
+export function StatsSection({ settings = {} }: StatsSectionProps) {
+  const statYears = parseInt(settings.stat_years) || 15
+  const statEmployees = parseInt(settings.stat_employees) || 2000
+  const statProjects = parseInt(settings.stat_projects) || 1500
+  const statBranches = parseInt(settings.stat_branches) || 5
+
   const stats = [
     {
       icon: <Calendar className="w-6.5 h-6.5" />,
-      targetValue: 15,
+      targetValue: statYears,
       suffix: '+',
       label: 'Năm Kinh Nghiệm',
     },
     {
       icon: <Users className="w-6.5 h-6.5" />,
-      targetValue: 1000,
+      targetValue: statEmployees,
       suffix: '+',
       label: 'Nhân Sự Vệ Sĩ',
     },
     {
       icon: <ShieldCheck className="w-6.5 h-6.5" />,
-      targetValue: 500,
+      targetValue: statProjects,
       suffix: '+',
-      label: 'Khách Hàng Hài Lòng',
+      label: 'Dự Án Hoàn Thành',
     },
     {
       icon: <Building className="w-6.5 h-6.5" />,
-      targetValue: 30,
+      targetValue: statBranches,
       suffix: '+',
-      label: 'Chi Nhánh Quốc Gia',
+      label: 'Chi Nhánh Đại Diện',
     },
   ]
 

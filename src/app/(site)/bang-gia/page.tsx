@@ -5,6 +5,8 @@ import { PageHero } from '@/components/ui/PageHero'
 import { PricingCalculator } from '@/components/pricing/PricingCalculator'
 import { QuoteSection } from '@/components/sections/QuoteSection'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Bảng Giá Dịch Vụ Bảo Vệ Chuyên Nghiệp | Long Việt Security',
   description: 'Tra cứu bảng giá dịch vụ bảo vệ chuyên nghiệp 2026. Công cụ tính toán chi phí bảo vệ tự động theo số chốt, ca trực. Hotline nhận báo giá chi tiết: 0923 840 999.',
@@ -14,6 +16,9 @@ export const metadata: Metadata = {
 }
 
 export default async function PricingPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_pricing || 'Tra cứu bảng giá dịch vụ bảo vệ chuyên nghiệp và ước lượng chi phí thuê bảo vệ nhanh chóng nhất.'
+
   // Fetch active services directly from the database to populate the calculator dropdown & comparison table
   const services = await prisma.service.findMany({
     where: {
@@ -42,7 +47,7 @@ export default async function PricingPage() {
     <div className="bg-secondary-dark min-h-screen">
       <PageHero
         title="Bảng Giá Dịch Vụ Bảo Vệ"
-        subtitle="Tra cứu bảng giá dịch vụ bảo vệ chuyên nghiệp và ước lượng chi phí thuê bảo vệ nhanh chóng nhất."
+        subtitle={pageSubtitle}
         breadcrumb={breadcrumb}
       />
 

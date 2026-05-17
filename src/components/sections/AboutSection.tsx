@@ -6,7 +6,19 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { ShieldCheck, Award, Briefcase, Zap } from 'lucide-react'
 
-export function AboutSection() {
+export interface AboutSectionProps {
+  settings?: Record<string, any>
+}
+
+export function AboutSection({ settings = {} }: AboutSectionProps) {
+  const siteName = settings.site_name || 'Long Việt Security'
+  const siteNameFirst = siteName.split(' ')[0] || 'Long Việt'
+  const expYears = settings.stat_years || '15'
+  
+  const aboutTitle = settings.home_about_title || 'Hành Trình Hơn 15 Năm Kiến Tạo Niềm Tin & Sự An Toàn Tuyệt Đối'
+  const aboutLead = settings.home_about_lead || 'Thành lập từ năm 2009, Công Ty Dịch Vụ Bảo Vệ Long Việt đã khẳng định vị thế là một trong những doanh nghiệp cung cấp giải pháp an ninh chuyên nghiệp hàng đầu Việt Nam.'
+  const aboutBody = settings.home_about_body || 'Chúng tôi không chỉ cung cấp dịch vụ bảo vệ đơn thuần mà mang đến giải pháp an ninh toàn diện được may đo phù hợp theo từng quy mô và nhu cầu cụ thể của doanh nghiệp, giúp bạn hoàn toàn an tâm tập trung sản xuất, kinh doanh.'
+
   return (
     <section className="py-20 bg-white overflow-hidden">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -18,7 +30,7 @@ export function AboutSection() {
             <div className="relative w-[90%] h-[90%] rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
               <Image
                 src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop"
-                alt="Long Việt Security corporate scale"
+                alt={`${siteName} corporate scale`}
                 fill
                 className="object-cover"
               />
@@ -31,7 +43,7 @@ export function AboutSection() {
                 <Award className="w-6 h-6" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-secondary leading-none">15+ Năm</span>
+                <span className="text-2xl font-bold text-secondary leading-none">{expYears}+ Năm</span>
                 <span className="text-xs text-text-muted mt-1 font-medium">Kinh Nghiệm Thực Chiến</span>
               </div>
             </div>
@@ -44,20 +56,20 @@ export function AboutSection() {
           <div className="lg:col-span-7 flex flex-col justify-center">
             {/* Section Header */}
             <span className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
-              Giới Thiệu Long Việt
+              Giới Thiệu {siteNameFirst}
             </span>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-secondary mb-6 leading-tight tracking-tight">
-              Hành Trình Hơn 15 Năm Kiến Tạo Niềm Tin & Sự An Toàn Tuyệt Đối
+              {aboutTitle}
             </h2>
 
             {/* Lead text */}
             <p className="text-body font-semibold text-secondary mb-4 leading-relaxed">
-              Thành lập từ năm 2009, Công Ty Dịch Vụ Bảo Vệ Long Việt đã khẳng định vị thế là một trong những doanh nghiệp cung cấp giải pháp an ninh chuyên nghiệp hàng đầu Việt Nam.
+              {aboutLead}
             </p>
 
             {/* Body copy */}
             <p className="text-body text-text-muted mb-8 leading-relaxed">
-              Chúng tôi không chỉ cung cấp dịch vụ bảo vệ đơn thuần mà mang đến giải pháp an ninh toàn diện được may đo phù hợp theo từng quy mô và nhu cầu cụ thể của doanh nghiệp, giúp bạn hoàn toàn an tâm tập trung sản xuất, kinh doanh.
+              {aboutBody}
             </p>
 
             {/* Core Pillars list */}

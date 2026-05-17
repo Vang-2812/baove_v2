@@ -51,8 +51,24 @@ function YoutubeIcon({ className }: { className?: string }) {
   )
 }
 
-export function Footer() {
+export interface FooterProps {
+  settings?: Record<string, any>
+}
+
+export function Footer({ settings = {} }: FooterProps) {
   const currentYear = new Date().getFullYear()
+
+  const siteName = settings.site_name || 'Long Việt Security'
+  const siteNameFirst = siteName.split(' ')[0] || 'LONG VIỆT'
+  const siteNameRest = siteName.split(' ').slice(1).join(' ') || 'Security'
+  const hotline = settings.company_hotline || '0923 840 999'
+  const hotlineTel = hotline.replace(/\s+/g, '')
+  const email = settings.company_email || 'info@baovelongviet.vn'
+  const address = settings.company_address || 'B23 Khu Dân Cư Nam Long, P. Phú Thuận, Quận 7, TP. Hồ Chí Minh'
+  
+  const facebookUrl = settings.facebook_url || 'https://facebook.com/baovelongviet'
+  const zaloUrl = settings.zalo_url || 'https://zalo.me/0923840999'
+  const youtubeUrl = settings.youtube_url || 'https://youtube.com/baovelongviet'
 
   const services = [
     { label: 'Bảo Vệ Nhà Máy', href: '/dich-vu/bao-ve-nha-may' },
@@ -86,22 +102,22 @@ export function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="font-heading font-bold text-lg md:text-xl leading-none text-white tracking-tight">
-                  LONG VIỆT
+                  {siteNameFirst}
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-widest text-primary mt-0.5 leading-none">
-                  Security
+                  {siteNameRest}
                 </span>
               </div>
             </Link>
             
             <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
-              Bảo Vệ Long Việt tự hào là đơn vị uy tín cung cấp dịch vụ bảo vệ chuyên nghiệp toàn quốc với đội ngũ nhân sự tinh nhuệ, an toàn tuyệt đối.
+              Bảo Vệ {siteNameFirst} tự hào là đơn vị uy tín cung cấp dịch vụ bảo vệ chuyên nghiệp toàn quốc với đội ngũ nhân sự tinh nhuệ, an toàn tuyệt đối.
             </p>
 
             {/* Social Icons */}
             <div className="flex items-center gap-3">
               <a
-                href="https://facebook.com/baovelongviet"
+                href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 bg-white/5 hover:bg-primary rounded-full flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200"
@@ -110,7 +126,7 @@ export function Footer() {
                 <FacebookIcon className="w-4.5 h-4.5" />
               </a>
               <a
-                href="https://zalo.me/baovelongviet"
+                href={zaloUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 bg-white/5 hover:bg-primary rounded-full flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200"
@@ -119,7 +135,7 @@ export function Footer() {
                 <ZaloIcon className="w-5 h-5" />
               </a>
               <a
-                href="https://youtube.com/@baovelongviet"
+                href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 bg-white/5 hover:bg-primary rounded-full flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200"
@@ -177,19 +193,19 @@ export function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <span>
-                  B23 Khu Dân Cư Nam Long, P. Phú Thuận, Quận 7, TP. Hồ Chí Minh
+                  {address}
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary shrink-0" />
-                <a href="tel:0923840999" className="hover:text-primary font-bold text-white transition-colors">
-                  0923 840 999
+                <a href={`tel:${hotlineTel}`} className="hover:text-primary font-bold text-white transition-colors">
+                  {hotline}
                 </a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary shrink-0" />
-                <a href="mailto:info@baovelongviet.vn" className="hover:text-primary transition-colors">
-                  info@baovelongviet.vn
+                <a href={`mailto:${email}`} className="hover:text-primary transition-colors">
+                  {email}
                 </a>
               </div>
             </div>
@@ -200,10 +216,10 @@ export function Footer() {
         {/* Divider */}
         <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
           <span>
-            © {currentYear} Công Ty Dịch Vụ Bảo Vệ Long Việt. Bảo lưu mọi quyền.
+            © {currentYear} Công Ty Dịch Vụ Bảo Vệ {siteNameFirst}. Bảo lưu mọi quyền.
           </span>
           <span>
-            Thiết kế bởi <a href="https://baovelongviet.vn" className="hover:text-primary transition-colors font-medium">Long Việt Security</a>
+            Thiết kế bởi <a href="/" className="hover:text-primary transition-colors font-medium">{siteName}</a>
           </span>
         </div>
 

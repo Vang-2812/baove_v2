@@ -6,6 +6,8 @@ import { PageHero } from '@/components/ui/PageHero'
 import { PartnerForm } from '@/components/forms/PartnerForm'
 import { Handshake, TrendingUp, ShieldAlert, Sparkles, Building } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Hợp Tác Phát Triển | Long Việt Security',
   description: 'Liên kết hợp tác cùng Long Việt Security để xây dựng chuỗi giải pháp an ninh toàn diện, chia sẻ cơ hội kinh doanh và tối đa hóa giá trị cho khách hàng.',
@@ -15,6 +17,9 @@ export const metadata: Metadata = {
 }
 
 export default async function CooperationPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_partnership || 'Hợp tác liên kết bền vững – Cộng hưởng giá trị – Kiến tạo an tâm'
+
   // Fetch active partners
   const partners = await prisma.partner.findMany({
     where: {
@@ -47,7 +52,7 @@ export default async function CooperationPage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Hợp Tác Cùng Long Việt"
-        subtitle="Hợp tác liên kết bền vững – Cộng hưởng giá trị – Kiến tạo an tâm"
+        subtitle={pageSubtitle}
       />
 
       {/* 1. BENEFITS SECTION */}
@@ -74,7 +79,7 @@ export default async function CooperationPage() {
             {benefits.map((benefit, idx) => (
               <div
                 key={idx}
-                className="group bg-secondary-light/10 border border-white/5 p-8 rounded-3xl space-y-4 hover:border-primary/20 hover:bg-secondary-light/20 transition-all duration-300 backdrop-blur-md"
+                className="group bg-secondary-light/30 border border-white/10 p-8 rounded-3xl space-y-4 hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 backdrop-blur-md shadow-xl shadow-black/10"
               >
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-200 shrink-0">
                   {benefit.icon}
@@ -126,7 +131,7 @@ export default async function CooperationPage() {
                 {partners.map((partner: any) => (
                   <div
                     key={partner.id}
-                    className="group bg-secondary-light/10 border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-primary/20 hover:bg-secondary-light/20 transition-all duration-300 h-24 relative overflow-hidden"
+                    className="group bg-secondary-light/30 border border-white/10 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 h-24 relative overflow-hidden shadow-md shadow-black/10"
                   >
                     {partner.logo ? (
                       <div className="relative w-full h-12 grayscale group-hover:grayscale-0 transition-all duration-300">

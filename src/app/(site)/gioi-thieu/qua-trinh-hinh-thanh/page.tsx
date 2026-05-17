@@ -5,6 +5,8 @@ import { Metadata } from 'next'
 import { PageHero } from '@/components/ui/PageHero'
 import { Calendar, ArrowLeft, Award, Sparkles } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Quá Trình Hình Thành & Lịch Sử | Long Việt Security',
   description: 'Hành trình 15 năm hình thành và phát triển bền bỉ xây dựng niềm tin của Long Việt Security từ năm 2009 đến nay.',
@@ -13,7 +15,10 @@ export const metadata: Metadata = {
   },
 }
 
-export default function HistoryPage() {
+export default async function HistoryPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_history || 'Hành trình 15 năm vượt qua thử thách – Khẳng định vị thế uy tín hàng đầu'
+
   const milestones = [
     {
       year: '2009',
@@ -57,7 +62,7 @@ export default function HistoryPage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Quá Trình Hình Thành"
-        subtitle="Hành trình 15 năm vượt qua thử thách – Khẳng định vị thế uy tín hàng đầu"
+        subtitle={pageSubtitle}
       />
 
       <section className="py-16 md:py-24 relative overflow-hidden">

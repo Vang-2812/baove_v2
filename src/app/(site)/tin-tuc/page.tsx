@@ -7,6 +7,8 @@ import { PageHero } from '@/components/ui/PageHero'
 import { NewsCard } from '@/components/ui/NewsCard'
 import { Search, Calendar, Phone, ArrowRight, Eye } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Tin Tức & Sự Kiện An Ninh | Long Việt Security',
   description: 'Cập nhật tin tức mới nhất về hoạt động công ty, nghiệp vụ an ninh bảo vệ, cẩm nang phòng cháy chữa cháy và thông tin tuyển dụng của Long Việt Security.',
@@ -24,6 +26,9 @@ interface PageProps {
 }
 
 export default async function NewsPage({ searchParams }: PageProps) {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_news || 'Cập nhật tin tức an ninh và cẩm nang huấn luyện thực chiến của Long Việt'
+
   const params = await searchParams
   const activeCategory = params.category || ''
   const query = params.q || ''
@@ -85,7 +90,7 @@ export default async function NewsPage({ searchParams }: PageProps) {
       {/* Banner Page Hero */}
       <PageHero
         title="Tin Tức & Chia Sẻ Chuyên Môn"
-        subtitle="Cập nhật tin tức an ninh và cẩm nang huấn luyện thực chiến của Long Việt"
+        subtitle={pageSubtitle}
       />
 
       <section className="py-16 md:py-20 relative">
@@ -202,11 +207,11 @@ export default async function NewsPage({ searchParams }: PageProps) {
             <aside className="space-y-8">
               
               {/* Recent posts widget */}
-              <div className="bg-secondary-light/10 border border-white/5 rounded-2xl p-6 space-y-4">
+              <div className="bg-secondary-light/30 border border-white/10 rounded-2xl p-6 space-y-4 shadow-xl shadow-black/10">
                 <h3 className="font-heading font-bold text-sm text-white border-l-2 border-primary pl-2 uppercase tracking-wider">
                   Bài Viết Mới Nhất
                 </h3>
-                <div className="space-y-4 divide-y divide-white/5">
+                <div className="space-y-4 divide-y divide-white/10">
                   {recentPosts.map((rp: any, idx: number) => (
                     <div key={rp.id} className={`pt-4 first:pt-0 flex gap-3 ${idx === 0 ? '' : 'pt-4'}`}>
                       {rp.thumbnail && (
@@ -236,7 +241,7 @@ export default async function NewsPage({ searchParams }: PageProps) {
               </div>
 
               {/* Categories list widget */}
-              <div className="bg-secondary-light/10 border border-white/5 rounded-2xl p-6 space-y-4">
+              <div className="bg-secondary-light/30 border border-white/10 rounded-2xl p-6 space-y-4 shadow-xl shadow-black/10">
                 <h3 className="font-heading font-bold text-sm text-white border-l-2 border-primary pl-2 uppercase tracking-wider">
                   Chuyên Mục Tin Tức
                 </h3>

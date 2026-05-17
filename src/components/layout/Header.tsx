@@ -31,7 +31,17 @@ function ServiceNavIcon({ name, className = 'w-4 h-4' }: { name: string; classNa
   return <Icons.Shield className={className} />
 }
 
-export function Header() {
+export interface HeaderProps {
+  settings?: Record<string, any>
+}
+
+export function Header({ settings = {} }: HeaderProps) {
+  const siteName = settings.site_name || 'Long Việt Security'
+  const siteNameFirst = siteName.split(' ')[0] || 'LONG VIỆT'
+  const siteNameRest = siteName.split(' ').slice(1).join(' ') || 'Security'
+  const hotline = settings.company_hotline || '0923 840 999'
+  const hotlineTel = hotline.replace(/\s+/g, '')
+
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
   const [expandedItems, setExpandedItems] = React.useState<Record<string, boolean>>({})
@@ -87,10 +97,10 @@ export function Header() {
             </div>
             <div className="flex flex-col">
               <span className="font-heading font-bold text-lg md:text-xl leading-none text-secondary tracking-tight">
-                LONG VIỆT
+                {siteNameFirst}
               </span>
               <span className="text-[10px] uppercase font-bold tracking-widest text-primary mt-0.5 leading-none">
-                Security
+                {siteNameRest}
               </span>
             </div>
           </Link>
@@ -236,7 +246,7 @@ export function Header() {
           {/* Right Action Widgets */}
           <div className="hidden lg:flex items-center gap-5">
             <a
-              href="tel:0923840999"
+              href={`tel:${hotlineTel}`}
               className="flex items-center gap-2 text-primary hover:text-primary-dark font-bold transition-all duration-150"
             >
               <div className="w-9 h-9 bg-primary/10 rounded-full flex items-center justify-center animate-pulse">
@@ -244,7 +254,7 @@ export function Header() {
               </div>
               <div className="flex flex-col">
                 <span className="text-[10px] text-text-muted leading-none font-medium text-left">Hotline 24/7</span>
-                <span className="text-sm font-bold tracking-tight">0923 840 999</span>
+                <span className="text-sm font-bold tracking-tight">{hotline}</span>
               </div>
             </a>
 
@@ -270,8 +280,8 @@ export function Header() {
       {/* Mobile Drawer Menu */}
       <div
         className={clsx(
-          'fixed inset-0 z-50 lg:hidden transition-all duration-300 pointer-events-none',
-          isMobileMenuOpen ? 'pointer-events-auto' : ''
+          'fixed inset-0 z-50 lg:hidden transition-all duration-300',
+          isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         )}
       >
         {/* Dark Backdrop */}
@@ -297,7 +307,7 @@ export function Header() {
                 <Icons.Shield className="w-4.5 h-4.5" />
               </div>
               <span className="font-heading font-bold text-base leading-none text-secondary">
-                LONG VIỆT SECURITY
+                {siteName.toUpperCase()}
               </span>
             </Link>
             <button
@@ -364,11 +374,11 @@ export function Header() {
           {/* Panel Footer */}
           <div className="p-4 border-t border-gray-100 flex flex-col gap-4 bg-gray-50">
             <a
-              href="tel:0923840999"
+              href={`tel:${hotlineTel}`}
               className="flex items-center justify-center gap-2.5 bg-primary/5 hover:bg-primary/10 text-primary py-3 rounded-xl font-bold transition-all"
             >
               <Icons.Phone className="w-4.5 h-4.5" />
-              <span>Gọi Hotline: 0923 840 999</span>
+              <span>Gọi Hotline: {hotline}</span>
             </a>
             <Link href="/#quote-form" onClick={() => setIsMobileMenuOpen(false)}>
               <Button variant="primary" size="md" className="w-full shadow-lg shadow-primary/25">

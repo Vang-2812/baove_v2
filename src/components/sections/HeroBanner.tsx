@@ -17,26 +17,35 @@ export interface Slide {
 
 interface Props {
   slides?: Slide[]
+  settings?: Record<string, any>
 }
 
-const defaultSlides: Slide[] = [
-  {
-    image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1600&auto=format&fit=crop',
-    headline: 'Dịch Vụ Bảo Vệ Chuyên Nghiệp',
-    subline: 'Đội ngũ vệ sĩ tinh nhuệ, huấn luyện bài bản. Đảm bảo an toàn tuyệt đối cho tài sản và con người của doanh nghiệp bạn.',
-    ctaPrimary: { label: 'Nhận Báo Giá Ngay', href: '#quote-form' },
-    ctaSecondary: { label: 'Tìm Hiểu Dịch Vụ', href: '/dich-vu' },
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1600&auto=format&fit=crop',
-    headline: 'An Toàn Tài Sản – Bình Yên Cuộc Sống',
-    subline: 'Hơn 15 năm uy tín đồng hành cùng 1000+ dự án nhà máy, văn phòng, sự kiện lớn trên khắp cả nước.',
-    ctaPrimary: { label: 'Liên Hệ Báo Giá', href: '#quote-form' },
-    ctaSecondary: { label: 'Tuyển Dụng Nhân Sự', href: '/tuyen-dung' },
-  },
-]
+const defaultSlides: Slide[] = []
 
-export function HeroBanner({ slides = defaultSlides }: Props) {
+export function HeroBanner({ slides, settings = {} }: Props) {
+  const siteName = settings.site_name || 'Long Việt'
+  const heroTitle = settings.home_hero_title || 'Dịch Vụ Bảo Vệ Chuyên Nghiệp'
+  const heroSubtitle = settings.home_hero_subtitle || 'An Toàn Tuyệt Đối – Kỷ Luật Thép – Phản Ứng Nhanh'
+
+  const dynamicSlides: Slide[] = [
+    {
+      image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1600&auto=format&fit=crop',
+      headline: heroTitle,
+      subline: heroSubtitle,
+      ctaPrimary: { label: 'Nhận Báo Giá Ngay', href: '#quote-form' },
+      ctaSecondary: { label: 'Tìm Hiểu Dịch Vụ', href: '/dich-vu' },
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1600&auto=format&fit=crop',
+      headline: 'An Toàn Tài Sản – Bình Yên Cuộc Sống',
+      subline: `Hơn 15 năm uy tín đồng hành cùng hàng nghìn dự án lớn của Bảo Vệ ${siteName} trên khắp cả nước.`,
+      ctaPrimary: { label: 'Liên Hệ Báo Giá', href: '#quote-form' },
+      ctaSecondary: { label: 'Tuyển Dụng Nhân Sự', href: '/tuyen-dung' },
+    },
+  ]
+
+  const activeSlides = slides && slides.length > 0 ? slides : dynamicSlides
+
   const [currentSlide, setCurrentSlide] = React.useState(0)
   const [isMobile, setIsMobile] = React.useState(true)
 
@@ -55,25 +64,25 @@ export function HeroBanner({ slides = defaultSlides }: Props) {
     if (isMobile) return
 
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length)
+      setCurrentSlide((prev) => (prev + 1) % activeSlides.length)
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [isMobile, slides.length])
+  }, [isMobile, activeSlides.length])
 
   const handlePrev = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+    setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length)
   }
 
   const handleNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length)
+    setCurrentSlide((prev) => (prev + 1) % activeSlides.length)
   }
 
   return (
     <section className="relative h-[85vh] md:h-[90vh] lg:h-screen w-full bg-secondary-dark overflow-hidden select-none">
       
       {/* Slides Wrapper */}
-      {slides.map((slide, idx) => (
+      {activeSlides.map((slide, idx) => (
         <div
           key={idx}
           className={clsx(
@@ -136,7 +145,7 @@ export function HeroBanner({ slides = defaultSlides }: Props) {
       ))}
 
       {/* Slider Controls (Desktop Only) */}
-      {!isMobile && slides.length > 1 && (
+      {!isMobile && activeSlides.length > 1 && (
         <>
           {/* Arrow Left */}
           <button
@@ -158,7 +167,7 @@ export function HeroBanner({ slides = defaultSlides }: Props) {
 
           {/* Dot Indicators */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
-            {slides.map((_, idx) => (
+            {activeSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentSlide(idx)}

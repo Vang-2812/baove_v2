@@ -4,6 +4,8 @@ import { Metadata } from 'next'
 import { PageHero } from '@/components/ui/PageHero'
 import { ArrowLeft, ShieldAlert, Award, Users, ChevronRight, UserCheck, Briefcase } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Cơ Cấu Tổ Chức Ban Lãnh Đạo | Long Việt Security',
   description: 'Khám phá sơ đồ cơ cấu tổ chức quản lý chặt chẽ của Long Việt Security, từ Ban Giám đốc đến các phòng đào tạo nghiệp vụ và đội cơ động phản ứng nhanh.',
@@ -12,7 +14,10 @@ export const metadata: Metadata = {
   },
 }
 
-export default function OrgChartPage() {
+export default async function OrgChartPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_structure || 'Hệ thống nhân sự chuyên nghiệp – Quản trị chặt chẽ – Vận hành kỷ luật'
+
   const departments = [
     {
       name: 'Ban Đào Tạo Nghiệp Vụ',
@@ -44,7 +49,7 @@ export default function OrgChartPage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Cơ Cấu Tổ Chức"
-        subtitle="Hệ thống nhân sự chuyên nghiệp – Quản trị chặt chẽ – Vận hành kỷ luật"
+        subtitle={pageSubtitle}
       />
 
       <section className="py-16 md:py-24 relative overflow-hidden">

@@ -162,7 +162,7 @@ export function ApplyFormCard({ job }: ApplyFormCardProps) {
   }
 
   return (
-    <div className="bg-secondary-light/10 border border-white/5 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl relative text-left">
+    <div className="bg-secondary-light/30 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl relative text-left">
       <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
 
       {/* Header */}
@@ -400,7 +400,7 @@ export function ApplyFormCard({ job }: ApplyFormCardProps) {
 
             <a
               href="tel:0923840999"
-              className="w-full text-center block bg-secondary-dark hover:bg-secondary-light/20 border border-white/5 text-gray-300 font-bold py-3 px-4 rounded-xl transition-all duration-200 text-xs md:text-sm"
+              className="w-full text-center block bg-secondary-dark hover:bg-secondary-light/30 border border-white/10 text-gray-300 font-bold py-3 px-4 rounded-xl transition-all duration-200 text-xs md:text-sm"
             >
               📞 Gọi trực tiếp: 0923 840 999
             </a>

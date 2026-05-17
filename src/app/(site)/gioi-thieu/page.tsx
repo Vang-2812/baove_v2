@@ -6,6 +6,7 @@ import prisma from '@/lib/db'
 import { PageHero } from '@/components/ui/PageHero'
 import { StatsSection } from '@/components/sections/StatsSection'
 import { Award, Compass, Heart, Users, Network, TrendingUp, Sparkles, Phone, Mail, MapPin, ArrowRight } from 'lucide-react'
+import { getSystemSettings } from '@/lib/settings'
 
 export const metadata: Metadata = {
   title: 'Giới Thiệu Về Long Việt Security | An Tâm Tuyệt Đối',
@@ -16,6 +17,9 @@ export const metadata: Metadata = {
 }
 
 export default async function AboutPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_about || '15 năm kiến tạo niềm tin – Đồng hành bảo vệ an toàn cho hàng nghìn doanh nghiệp'
+
   // Fetch regional branches
   const branches = await prisma.branch.findMany({
     orderBy: { order: 'asc' },
@@ -58,7 +62,7 @@ export default async function AboutPage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Về Chúng Tôi"
-        subtitle="15 năm kiến tạo niềm tin – Đồng hành bảo vệ an toàn cho hàng nghìn doanh nghiệp"
+        subtitle={pageSubtitle}
       />
 
       {/* 1. OVERVIEW SECTION */}
@@ -91,7 +95,7 @@ export default async function AboutPage() {
 
             {/* Right Col: Graphic & Floating Badges */}
             <div className="relative">
-              <div className="relative w-full h-[300px] md:h-[450px] rounded-3xl overflow-hidden bg-secondary-light/10 border border-white/5 shadow-2xl">
+              <div className="relative w-full h-[300px] md:h-[450px] rounded-3xl overflow-hidden bg-secondary-light/30 border border-white/10 shadow-2xl">
                 <Image
                   src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop"
                   alt="Giới thiệu Long Việt Security"
@@ -120,7 +124,7 @@ export default async function AboutPage() {
       <StatsSection />
 
       {/* 3. CERTIFICATES SECTION */}
-      <section className="py-16 md:py-20 bg-secondary-light/5 border-t border-b border-white/5 relative">
+      <section className="py-16 md:py-20 bg-secondary-light/10 border-t border-b border-white/10 relative">
         <div className="container mx-auto px-4 max-w-7xl">
           
           <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
@@ -141,7 +145,7 @@ export default async function AboutPage() {
             {certificates.map((cert, idx) => (
               <div
                 key={idx}
-                className="group bg-secondary-light/10 border border-white/5 rounded-2xl overflow-hidden hover:border-primary/20 transition-all duration-300 flex flex-col"
+                className="group bg-secondary-light/30 border border-white/10 rounded-2xl overflow-hidden hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 flex flex-col shadow-xl shadow-black/10"
               >
                 <div className="relative w-full h-48 bg-secondary-dark overflow-hidden">
                   <Image
@@ -190,8 +194,8 @@ export default async function AboutPage() {
             {branches.map((branch) => (
               <div
                 key={branch.id}
-                className={`bg-secondary-light/10 border p-6 rounded-2xl space-y-4 flex flex-col justify-between hover:border-primary/20 transition-all duration-300 relative ${
-                  branch.is_main ? 'border-primary/30 ring-1 ring-primary/20' : 'border-white/5'
+                className={`bg-secondary-light/30 border p-6 rounded-2xl space-y-4 flex flex-col justify-between hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 relative shadow-xl shadow-black/10 ${
+                  branch.is_main ? 'border-primary/35 ring-1 ring-primary/25' : 'border-white/10'
                 }`}
               >
                 {branch.is_main && (

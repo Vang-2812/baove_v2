@@ -4,6 +4,8 @@ import { Metadata } from 'next'
 import { PageHero } from '@/components/ui/PageHero'
 import { ArrowLeft, Target, Heart, Shield, Sparkles, UserCheck, Flame } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Tầm Nhìn Sứ Mệnh & Giá Trị Cốt Lõi | Long Việt Security',
   description: 'Khám phá tầm nhìn chiến lược, sứ mệnh bảo vệ an tâm và 4 giá trị cốt lõi làm nên uy tín hàng đầu của Công Ty Dịch Vụ Bảo Vệ Long Việt.',
@@ -12,7 +14,10 @@ export const metadata: Metadata = {
   },
 }
 
-export default function MissionPage() {
+export default async function MissionPage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_vision || 'Kim chỉ nam dẫn lối mọi hành động của tập thể cán bộ chiến sĩ Long Việt Security'
+
   const coreValues = [
     {
       title: 'Uy Tín Vàng',
@@ -40,7 +45,7 @@ export default function MissionPage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Tầm Nhìn & Sứ Mệnh"
-        subtitle="Kim chỉ nam dẫn lối mọi hành động của tập thể cán bộ chiến sĩ Long Việt Security"
+        subtitle={pageSubtitle}
       />
 
       <section className="py-16 md:py-24 relative overflow-hidden">
@@ -61,7 +66,7 @@ export default function MissionPage() {
           <div className="space-y-16">
             
             {/* 1. VISION SECTION */}
-            <div className="bg-secondary-light/10 border border-white/5 p-8 rounded-3xl flex flex-col md:flex-row items-center gap-8 backdrop-blur-md">
+            <div className="bg-secondary-light/30 border border-white/10 p-8 rounded-3xl flex flex-col md:flex-row items-center gap-8 backdrop-blur-md shadow-xl shadow-black/10">
               <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0 shadow-lg shadow-primary/5 border border-primary/10">
                 <Target className="w-10 h-10 animate-spin-slow" />
               </div>
@@ -76,7 +81,7 @@ export default function MissionPage() {
             </div>
 
             {/* 2. MISSION SECTION */}
-            <div className="bg-secondary-light/10 border border-white/5 p-8 rounded-3xl flex flex-col md:flex-row-reverse items-center gap-8 backdrop-blur-md">
+            <div className="bg-secondary-light/30 border border-white/10 p-8 rounded-3xl flex flex-col md:flex-row-reverse items-center gap-8 backdrop-blur-md shadow-xl shadow-black/10">
               <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0 shadow-lg shadow-primary/5 border border-primary/10">
                 <Heart className="w-10 h-10 animate-pulse text-rose-500" />
               </div>
@@ -105,7 +110,7 @@ export default function MissionPage() {
                 {coreValues.map((val, idx) => (
                   <div
                     key={idx}
-                    className="group bg-secondary-light/10 border border-white/5 p-6 rounded-2xl space-y-4 hover:border-primary/20 transition-all duration-300"
+                    className="group bg-secondary-light/30 border border-white/10 p-6 rounded-2xl space-y-4 hover:border-primary/30 hover:bg-secondary-light/50 transition-all duration-300 shadow-xl shadow-black/10"
                   >
                     <div className="w-10 h-10 bg-secondary-light/20 rounded-xl flex items-center justify-center border border-white/5 shrink-0">
                       {val.icon}

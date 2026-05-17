@@ -4,6 +4,8 @@ import { Metadata } from 'next'
 import { PageHero } from '@/components/ui/PageHero'
 import { ArrowLeft, Check, X, Shield, Phone, Sparkles } from 'lucide-react'
 
+import { getSystemSettings } from '@/lib/settings'
+
 export const metadata: Metadata = {
   title: 'Sự Khác Biệt & Lợi Thế Cạnh Tranh | Long Việt Security',
   description: 'Bảng so sánh chi tiết và thuyết phục giữa giải pháp tự tuyển dụng bảo vệ nội bộ và thuê dịch vụ bảo vệ chuyên nghiệp Long Việt Security.',
@@ -12,7 +14,12 @@ export const metadata: Metadata = {
   },
 }
 
-export default function DifferencePage() {
+export default async function DifferencePage() {
+  const settings = await getSystemSettings()
+  const pageSubtitle = settings.sub_difference || 'Tại sao hàng nghìn doanh nghiệp lựa chọn Long Việt thay vì tự tuyển bảo vệ nội bộ?'
+  const hotline = settings.company_hotline || '0923 840 999'
+  const hotlineTel = hotline.replace(/\s+/g, '')
+
   const comparison = [
     {
       aspect: 'Chi phí quản lý phát sinh',
@@ -56,7 +63,7 @@ export default function DifferencePage() {
     <main className="bg-secondary-dark min-h-screen text-left">
       <PageHero
         title="Sự Khác Biệt Vượt Trội"
-        subtitle="Tại sao hàng nghìn doanh nghiệp lựa chọn Long Việt thay vì tự tuyển bảo vệ nội bộ?"
+        subtitle={pageSubtitle}
       />
 
       <section className="py-16 md:py-24 relative overflow-hidden">
@@ -89,16 +96,16 @@ export default function DifferencePage() {
             </div>
 
             {/* Comparison Table */}
-            <div className="overflow-x-auto rounded-3xl border border-white/5 bg-secondary-light/10 backdrop-blur-md shadow-2xl">
+            <div className="overflow-x-auto rounded-3xl border border-white/10 bg-secondary-light/30 backdrop-blur-md shadow-2xl">
               <table className="w-full min-w-[700px] border-collapse text-left text-xs md:text-sm">
                 <thead>
-                  <tr className="border-b border-white/5 bg-white/5 text-white font-heading font-extrabold">
+                  <tr className="border-b border-white/10 bg-white/5 text-white font-heading font-extrabold">
                     <th className="p-5 md:p-6 w-[20%] uppercase tracking-wider">Hạng Mục So Sánh</th>
                     <th className="p-5 md:p-6 w-[40%] text-gray-400 uppercase tracking-wider">Tự Tuyển Bảo Vệ Nội Bộ</th>
                     <th className="p-5 md:p-6 w-[40%] text-primary uppercase tracking-wider bg-primary/5">Dịch Vụ Long Việt Security</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-gray-300">
+                <tbody className="divide-y divide-white/10 text-gray-300">
                   {comparison.map((item, idx) => (
                     <tr key={idx} className="hover:bg-white/5 transition-colors">
                       {/* Aspect title */}
@@ -139,11 +146,11 @@ export default function DifferencePage() {
                 </p>
               </div>
               <a
-                href="tel:0923840999"
+                href={`tel:${hotlineTel}`}
                 className="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-bold transition-colors shadow-lg shadow-primary/25 text-center shrink-0 w-full md:w-auto flex items-center justify-center gap-1.5"
               >
                 <Phone className="w-4 h-4 animate-bounce" />
-                <span>Hotline: 0923 840 999</span>
+                <span>Hotline: {hotline}</span>
               </a>
             </div>
 

@@ -169,7 +169,7 @@ export default async function JobDetailPage({ params }: JobPageProps) {
             {/* Main Content Area */}
             <article className="space-y-8">
               {/* Job Header Info */}
-              <div className="bg-secondary-light/10 border border-white/5 p-8 rounded-3xl backdrop-blur-md space-y-6">
+              <div className="bg-secondary-light/30 border border-white/10 p-8 rounded-3xl backdrop-blur-md space-y-6 shadow-xl shadow-black/10">
                 <div className="flex items-center gap-3">
                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-500 bg-emerald-500/5 px-3 py-1 rounded-full border border-emerald-500/10">
                     {job.status === 'OPEN' ? 'Đang tuyển dụng' : 'Tạm dừng nhận hồ sơ'}
@@ -183,7 +183,7 @@ export default async function JobDetailPage({ params }: JobPageProps) {
                   {job.title}
                 </h1>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-white/5 text-gray-300 text-xs md:text-sm font-sans font-light">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-white/10 text-gray-300 text-xs md:text-sm font-sans font-light">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                       <MapPin className="w-4 h-4" />
@@ -209,7 +209,7 @@ export default async function JobDetailPage({ params }: JobPageProps) {
               </div>
 
               {/* Job Richtext Descriptions */}
-              <div className="bg-secondary-light/10 border border-white/5 p-8 rounded-3xl backdrop-blur-md space-y-8 font-sans">
+              <div className="bg-secondary-light/30 border border-white/10 p-8 rounded-3xl backdrop-blur-md space-y-8 font-sans shadow-xl shadow-black/10">
                 {/* 1. Job Description */}
                 <div className="space-y-4">
                   <h3 className="font-heading font-extrabold text-lg text-white flex items-center gap-2">
@@ -224,7 +224,7 @@ export default async function JobDetailPage({ params }: JobPageProps) {
                 </div>
 
                 {/* 2. Job Requirements */}
-                <div className="space-y-4 pt-6 border-t border-white/5">
+                <div className="space-y-4 pt-6 border-t border-white/10">
                   <h3 className="font-heading font-extrabold text-lg text-white flex items-center gap-2">
                     <ChevronRight className="w-4 h-4 text-primary" />
                     <span>Yêu Cầu Ứng Viên</span>
@@ -237,7 +237,7 @@ export default async function JobDetailPage({ params }: JobPageProps) {
                 </div>
 
                 {/* 3. Job Benefits */}
-                <div className="space-y-4 pt-6 border-t border-white/5">
+                <div className="space-y-4 pt-6 border-t border-white/10">
                   <h3 className="font-heading font-extrabold text-lg text-white flex items-center gap-2">
                     <ChevronRight className="w-4 h-4 text-primary" />
                     <span>Quyền Lợi Được Hưởng</span>
@@ -251,7 +251,7 @@ export default async function JobDetailPage({ params }: JobPageProps) {
               </div>
 
               {/* General Static Requirements Box */}
-              <div className="bg-secondary-light/10 border border-white/5 p-8 rounded-3xl backdrop-blur-md space-y-4">
+              <div className="bg-secondary-light/30 border border-white/10 p-8 rounded-3xl backdrop-blur-md space-y-4 shadow-xl shadow-black/10">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-primary shrink-0" />
                   <h4 className="font-heading font-extrabold text-base text-white">
