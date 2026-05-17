@@ -24,6 +24,8 @@ export async function GET(request: Request) {
     const search = url.searchParams.get('search')
     const page = parseInt(url.searchParams.get('page') || '1', 10)
     const limit = parseInt(url.searchParams.get('limit') || '20', 10)
+    const sortBy = url.searchParams.get('sortBy') || 'created_at'
+    const sortOrder = url.searchParams.get('sortOrder') || 'desc'
     const skip = (page - 1) * limit
 
     // 3. Build where query conditions
@@ -52,7 +54,7 @@ export async function GET(request: Request) {
       prisma.contact.findMany({
         where,
         orderBy: {
-          created_at: 'desc',
+          [sortBy]: sortOrder,
         },
         skip,
         take: limit,

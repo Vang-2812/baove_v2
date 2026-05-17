@@ -17,6 +17,9 @@ import {
   CheckCircle,
   X,
   FileSpreadsheet,
+  ChevronUp,
+  ChevronDown,
+  ArrowUpDown,
 } from 'lucide-react'
 
 interface ContactItem {
@@ -44,6 +47,8 @@ export default function ContactsAdminPage() {
   const [totalPages, setTotalPages] = React.useState<number>(1)
   const [totalRecords, setTotalRecords] = React.useState<number>(0)
   const [isLoading, setIsLoading] = React.useState<boolean>(true)
+  const [sortBy, setSortBy] = React.useState<string>('created_at')
+  const [sortOrder, setSortOrder] = React.useState<string>('desc')
 
   // Selected lead for detail view
   const [selectedLead, setSelectedLead] = React.useState<ContactItem | null>(null)
@@ -61,6 +66,8 @@ export default function ContactsAdminPage() {
         limit: '15',
         status: statusFilter,
         search: searchQuery,
+        sortBy,
+        sortOrder,
       })
 
       const res = await fetch(`/api/admin/contacts?${params.toString()}`, {
@@ -80,7 +87,40 @@ export default function ContactsAdminPage() {
     } finally {
       setIsLoading(false)
     }
-  }, [page, statusFilter, searchQuery])
+  }, [page, statusFilter, searchQuery, sortBy, sortOrder])
+
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortBy(field)
+      setSortOrder('asc')
+    }
+    setPage(1)
+  }
+
+  const renderSortHeader = (field: string, label: string) => {
+    const isActive = sortBy === field
+    return (
+      <button
+        onClick={() => handleSort(field)}
+        className={`inline-flex items-center gap-1 hover:text-white transition-colors uppercase tracking-widest font-extrabold cursor-pointer focus:outline-none text-[10px] ${
+          isActive ? 'text-primary' : 'text-gray-400'
+        }`}
+      >
+        <span>{label}</span>
+        {isActive ? (
+          sortOrder === 'asc' ? (
+            <ChevronUp className="w-3 h-3 text-primary shrink-0" />
+          ) : (
+            <ChevronDown className="w-3 h-3 text-primary shrink-0" />
+          )
+        ) : (
+          <ArrowUpDown className="w-3 h-3 text-gray-500 hover:text-gray-400 shrink-0" />
+        )}
+      </button>
+    )
+  }
 
   React.useEffect(() => {
     fetchContacts()
@@ -238,13 +278,13 @@ export default function ContactsAdminPage() {
             <table className="w-full text-left border-collapse font-sans">
               <thead>
                 <tr className="border-b border-white/5 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest pb-3">
-                  <th className="pb-3 pr-4">Thời Gian</th>
-                  <th className="pb-3 pr-4">Họ Tên</th>
-                  <th className="pb-3 pr-4">Số Điện Thoại</th>
-                  <th className="pb-3 pr-4">Dịch Vụ Quan Tâm</th>
-                  <th className="pb-3 pr-4">Khu Vực</th>
-                  <th className="pb-3 pr-4">Nguồn</th>
-                  <th className="pb-3 pr-4">Trạng Thái</th>
+                  <th className="pb-3 pr-4">{renderSortHeader('created_at', 'Thời Gian')}</th>
+                  <th className="pb-3 pr-4">{renderSortHeader('name', 'Họ Tên')}</th>
+                  <th className="pb-3 pr-4">{renderSortHeader('phone', 'Số Điện Thoại')}</th>
+                  <th className="pb-3 pr-4">{renderSortHeader('service_type', 'Dịch Vụ')}</th>
+                  <th className="pb-3 pr-4">{renderSortHeader('province', 'Khu Vực')}</th>
+                  <th className="pb-3 pr-4">{renderSortHeader('source', 'Nguồn')}</th>
+                  <th className="pb-3 pr-4">{renderSortHeader('status', 'Trạng Thái')}</th>
                   <th className="pb-3">Hành Động</th>
                 </tr>
               </thead>

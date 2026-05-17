@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { FileText, Download, Phone, Mail, CheckCircle, Search, RefreshCw, XCircle } from 'lucide-react'
+import { FileText, Download, Phone, Mail, CheckCircle, Search, RefreshCw, XCircle, ChevronUp, ChevronDown, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { updateApplicationStatus } from '../actions'
 
 interface ApplicationsListProps {
@@ -15,6 +15,47 @@ export function ApplicationsList({ initialApplications, jobs }: ApplicationsList
   const [selectedStatus, setSelectedStatus] = React.useState('')
   const [searchQuery, setSearchQuery] = React.useState('')
   const [updatingId, setUpdatingId] = React.useState<string | null>(null)
+  const [sortBy, setSortBy] = React.useState('created_at')
+  const [sortOrder, setSortOrder] = React.useState('desc')
+  const [page, setPage] = React.useState(1)
+  const limit = 7
+
+  React.useEffect(() => {
+    setPage(1)
+  }, [searchQuery, selectedJobId, selectedStatus])
+
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortBy(field)
+      setSortOrder('asc')
+    }
+    setPage(1)
+  }
+
+  const renderSortHeader = (field: string, label: string) => {
+    const isActive = sortBy === field
+    return (
+      <button
+        onClick={() => handleSort(field)}
+        className={`inline-flex items-center gap-1 hover:text-white transition-colors uppercase tracking-widest font-extrabold cursor-pointer focus:outline-none text-[10px] ${
+          isActive ? 'text-primary' : 'text-gray-400'
+        }`}
+      >
+        <span>{label}</span>
+        {isActive ? (
+          sortOrder === 'asc' ? (
+            <ChevronUp className="w-3 h-3 text-primary shrink-0" />
+          ) : (
+            <ChevronDown className="w-3 h-3 text-primary shrink-0" />
+          )
+        ) : (
+          <ArrowUpDown className="w-3 h-3 text-gray-500 hover:text-gray-400 shrink-0" />
+        )}
+      </button>
+    )
+  }
 
   // Status mapping and styling
   const getStatusStyle = (status: string) => {
@@ -72,6 +113,23 @@ export function ApplicationsList({ initialApplications, jobs }: ApplicationsList
       : true
     return matchesJob && matchesStatus && matchesSearch
   })
+
+  const sortedApps = [...filteredApps].sort((a, b) => {
+    let comparison = 0
+    if (sortBy === 'created_at') {
+      comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    } else if (sortBy === 'experience_years') {
+      comparison = (a.experience_years || 0) - (b.experience_years || 0)
+    } else {
+      const valA = String(a[sortBy] || '').toLowerCase()
+      const valB = String(b[sortBy] || '').toLowerCase()
+      comparison = valA.localeCompare(valB)
+    }
+    return sortOrder === 'asc' ? comparison : -comparison
+  })
+
+  const totalPages = Math.ceil(sortedApps.length / limit)
+  const paginatedApps = sortedApps.slice((page - 1) * limit, page * limit)
 
   // Export to CSV with UTF-8 BOM
   const exportToExcel = () => {
@@ -186,19 +244,19 @@ export function ApplicationsList({ initialApplications, jobs }: ApplicationsList
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-white/5 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest pb-3">
-                <th className="pb-3 pr-4">Họ và Tên</th>
+                <th className="pb-3 pr-4">{renderSortHeader('name', 'Họ và Tên')}</th>
                 <th className="pb-3 pr-4">Liên Hệ</th>
                 <th className="pb-3 pr-4">Vị trí ứng tuyển</th>
-                <th className="pb-3 pr-4 text-center">Kinh nghiệm</th>
-                <th className="pb-3 pr-4">Khu vực</th>
-                <th className="pb-3 pr-4">Ngày nộp</th>
-                <th className="pb-3 pr-4 w-40 text-center">Trạng Thái</th>
+                <th className="pb-3 pr-4 text-center">{renderSortHeader('experience_years', 'Kinh nghiệm')}</th>
+                <th className="pb-3 pr-4">{renderSortHeader('preferred_location', 'Khu vực')}</th>
+                <th className="pb-3 pr-4">{renderSortHeader('created_at', 'Ngày nộp')}</th>
+                <th className="pb-3 pr-4 w-40 text-center">{renderSortHeader('status', 'Trạng Thái')}</th>
                 <th className="pb-3 w-20 text-right">CV</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-xs text-gray-300 font-light font-sans">
-              {filteredApps.length > 0 ? (
-                filteredApps.map((app: any) => (
+              {paginatedApps.length > 0 ? (
+                paginatedApps.map((app: any) => (
                   <tr key={app.id} className="hover:bg-white/[0.01] transition-colors">
                     {/* Name */}
                     <td className="py-4 pr-4">
@@ -299,6 +357,30 @@ export function ApplicationsList({ initialApplications, jobs }: ApplicationsList
             </tbody>
           </table>
         </div>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between pt-4 border-t border-white/5 font-sans mt-4">
+            <span className="text-xs text-gray-400 font-light">
+              Hiển thị trang <strong className="text-white font-bold">{page}</strong> trên <strong className="text-white font-bold">{totalPages}</strong> trang ({sortedApps.length} hồ sơ)
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+                className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(page + 1)}
+                className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

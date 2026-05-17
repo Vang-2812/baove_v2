@@ -1,21 +1,59 @@
 import * as React from 'react'
 import prisma from '@/lib/db'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, Check, X, FileText, BookOpen } from 'lucide-react'
+import { Plus, Edit, FileText, BookOpen } from 'lucide-react'
 import { deletePost } from '../actions'
 import { DeleteButton } from '@/components/ui/DeleteButton'
+import { AdminSearch } from '@/components/ui/AdminSearch'
+import { AdminPagination } from '@/components/ui/AdminPagination'
+import { AdminSortHeader } from '@/components/ui/AdminSortHeader'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminPostsPage() {
-  const posts = await prisma.post.findMany({
-    orderBy: {
-      created_at: 'desc',
-    },
-    include: {
-      category: true,
-    },
-  })
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function AdminPostsPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams
+  const q = typeof resolvedParams.q === 'string' ? resolvedParams.q : ''
+  const page = typeof resolvedParams.page === 'string' ? parseInt(resolvedParams.page, 10) : 1
+  const sortBy = typeof resolvedParams.sortBy === 'string' ? resolvedParams.sortBy : 'created_at'
+  const sortOrder = typeof resolvedParams.sortOrder === 'string' && ['asc', 'desc'].includes(resolvedParams.sortOrder)
+    ? (resolvedParams.sortOrder as 'asc' | 'desc')
+    : 'desc'
+
+  const limit = 7
+  const skip = (page - 1) * limit
+
+  // Search filter
+  const where: any = q
+    ? {
+        OR: [
+          { title: { contains: q, mode: 'insensitive' } },
+          { slug: { contains: q, mode: 'insensitive' } },
+          { content: { contains: q, mode: 'insensitive' } },
+        ],
+      }
+    : {}
+
+  // Fetch count and posts in parallel
+  const [posts, totalRecords] = await Promise.all([
+    prisma.post.findMany({
+      where,
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+      include: {
+        category: true,
+      },
+      skip,
+      take: limit,
+    }),
+    prisma.post.count({ where }),
+  ])
+
+  const totalPages = Math.ceil(totalRecords / limit)
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -38,13 +76,13 @@ export default async function AdminPostsPage() {
     if (type === 'DOCUMENT') {
       return (
         <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-blue-500 bg-blue-500/5 px-2.5 py-0.5 rounded-full border border-blue-500/10 uppercase tracking-wider">
-          <BookOpen className="w-3 h-3" /> Tài Liệu
+          <BookOpen className="w-3 h-3 shrink-0" /> Tài Liệu
         </span>
       )
     }
     return (
       <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-purple-500 bg-purple-500/5 px-2.5 py-0.5 rounded-full border border-purple-500/10 uppercase tracking-wider">
-        <FileText className="w-3 h-3" /> Tin Tức
+        <FileText className="w-3 h-3 shrink-0" /> Tin Tức
       </span>
     )
   }
@@ -70,18 +108,48 @@ export default async function AdminPostsPage() {
         </Link>
       </div>
 
+      {/* Filter / Search Bar */}
+      <div className="bg-secondary-light/10 border border-white/5 p-5 rounded-3xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="text-xs text-gray-400 font-light">
+          {q ? (
+            <span>
+              Tìm thấy <strong className="text-white font-bold">{totalRecords}</strong> kết quả phù hợp cho từ khóa &quot;<strong className="text-white font-bold">{q}</strong>&quot;
+            </span>
+          ) : (
+            <span>Tổng cộng <strong className="text-white font-bold">{totalRecords}</strong> bài viết</span>
+          )}
+        </div>
+        <AdminSearch placeholder="Tìm theo tiêu đề, slug, nội dung..." />
+      </div>
+
       {/* Posts Table */}
-      <div className="bg-secondary-light/10 border border-white/5 rounded-3xl p-6 backdrop-blur-md">
+      <div className="bg-secondary-light/10 border border-white/5 rounded-3xl p-6 backdrop-blur-md space-y-4">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-white/5 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest pb-3">
                 <th className="pb-3 pr-4 w-20">Ảnh nhỏ</th>
-                <th className="pb-3 pr-4">Tiêu đề bài viết</th>
-                <th className="pb-3 pr-4">Thể Loại</th>
+                <th className="pb-3 pr-4">
+                  <AdminSortHeader field="title" currentSortBy={sortBy} currentSortOrder={sortOrder}>
+                    Tiêu đề bài viết
+                  </AdminSortHeader>
+                </th>
+                <th className="pb-3 pr-4">
+                  <AdminSortHeader field="type" currentSortBy={sortBy} currentSortOrder={sortOrder}>
+                    Thể Loại
+                  </AdminSortHeader>
+                </th>
                 <th className="pb-3 pr-4">Danh Mục</th>
-                <th className="pb-3 pr-4 text-center">Trạng Thái</th>
-                <th className="pb-3 pr-4 w-28 text-center">Lượt xem</th>
+                <th className="pb-3 pr-4 text-center">
+                  <AdminSortHeader field="status" currentSortBy={sortBy} currentSortOrder={sortOrder} className="w-full justify-center">
+                    Trạng Thái
+                  </AdminSortHeader>
+                </th>
+                <th className="pb-3 pr-4 w-28 text-center">
+                  <AdminSortHeader field="view_count" currentSortBy={sortBy} currentSortOrder={sortOrder} className="w-full justify-center">
+                    Lượt xem
+                  </AdminSortHeader>
+                </th>
                 <th className="pb-3 w-28 text-right">Thao Tác</th>
               </tr>
             </thead>
@@ -143,13 +211,21 @@ export default async function AdminPostsPage() {
               ) : (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-gray-500 font-light">
-                    Chưa có bài viết hay tài liệu nào trong hệ thống.
+                    Chưa có bài viết hay tài liệu nào phù hợp với bộ lọc tìm kiếm.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        <AdminPagination
+          currentPage={page}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          limit={limit}
+        />
       </div>
     </div>
   )

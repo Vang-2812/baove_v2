@@ -1,25 +1,64 @@
 import * as React from 'react'
 import prisma from '@/lib/db'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, Users, MapPin, DollarSign, Calendar } from 'lucide-react'
+import { Plus, Edit, Users, MapPin, DollarSign } from 'lucide-react'
 import { deleteJob } from '../actions'
 import { DeleteButton } from '@/components/ui/DeleteButton'
+import { AdminSearch } from '@/components/ui/AdminSearch'
+import { AdminPagination } from '@/components/ui/AdminPagination'
+import { AdminSortHeader } from '@/components/ui/AdminSortHeader'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminJobsPage() {
-  const jobs = await prisma.job.findMany({
-    orderBy: {
-      created_at: 'desc',
-    },
-    include: {
-      _count: {
-        select: {
-          applications: true,
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function AdminJobsPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams
+  const q = typeof resolvedParams.q === 'string' ? resolvedParams.q : ''
+  const page = typeof resolvedParams.page === 'string' ? parseInt(resolvedParams.page, 10) : 1
+  const sortBy = typeof resolvedParams.sortBy === 'string' ? resolvedParams.sortBy : 'created_at'
+  const sortOrder = typeof resolvedParams.sortOrder === 'string' && ['asc', 'desc'].includes(resolvedParams.sortOrder)
+    ? (resolvedParams.sortOrder as 'asc' | 'desc')
+    : 'desc'
+
+  const limit = 7
+  const skip = (page - 1) * limit
+
+  // Search filter
+  const where: any = q
+    ? {
+        OR: [
+          { title: { contains: q, mode: 'insensitive' } },
+          { slug: { contains: q, mode: 'insensitive' } },
+          { location: { contains: q, mode: 'insensitive' } },
+          { description: { contains: q, mode: 'insensitive' } },
+        ],
+      }
+    : {}
+
+  // Fetch count and jobs in parallel
+  const [jobs, totalRecords] = await Promise.all([
+    prisma.job.findMany({
+      where,
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+      include: {
+        _count: {
+          select: {
+            applications: true,
+          },
         },
       },
-    },
-  })
+      skip,
+      take: limit,
+    }),
+    prisma.job.count({ where }),
+  ])
+
+  const totalPages = Math.ceil(totalRecords / limit)
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -76,17 +115,43 @@ export default async function AdminJobsPage() {
         </Link>
       </div>
 
+      {/* Filter / Search Bar */}
+      <div className="bg-secondary-light/10 border border-white/5 p-5 rounded-3xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="text-xs text-gray-400 font-light">
+          {q ? (
+            <span>
+              Tìm thấy <strong className="text-white font-bold">{totalRecords}</strong> kết quả phù hợp cho từ khóa &quot;<strong className="text-white font-bold">{q}</strong>&quot;
+            </span>
+          ) : (
+            <span>Tổng cộng <strong className="text-white font-bold">{totalRecords}</strong> tin tuyển dụng</span>
+          )}
+        </div>
+        <AdminSearch placeholder="Tìm theo vị trí, địa điểm..." />
+      </div>
+
       {/* Jobs Table */}
-      <div className="bg-secondary-light/10 border border-white/5 rounded-3xl p-6 backdrop-blur-md">
+      <div className="bg-secondary-light/10 border border-white/5 rounded-3xl p-6 backdrop-blur-md space-y-4">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-white/5 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest pb-3">
-                <th className="pb-3 pr-4">Vị trí tuyển dụng</th>
-                <th className="pb-3 pr-4">Địa bàn / Khu vực</th>
+                <th className="pb-3 pr-4">
+                  <AdminSortHeader field="title" currentSortBy={sortBy} currentSortOrder={sortOrder}>
+                    Vị trí tuyển dụng
+                  </AdminSortHeader>
+                </th>
+                <th className="pb-3 pr-4">
+                  <AdminSortHeader field="location" currentSortBy={sortBy} currentSortOrder={sortOrder}>
+                    Địa bàn / Khu vực
+                  </AdminSortHeader>
+                </th>
                 <th className="pb-3 pr-4">Mức Lương</th>
                 <th className="pb-3 pr-4">Hình thức</th>
-                <th className="pb-3 pr-4 text-center">Trạng Thái</th>
+                <th className="pb-3 pr-4 text-center">
+                  <AdminSortHeader field="status" currentSortBy={sortBy} currentSortOrder={sortOrder} className="w-full justify-center">
+                    Trạng Thái
+                  </AdminSortHeader>
+                </th>
                 <th className="pb-3 pr-4 w-32 text-center">Đã nộp CV</th>
                 <th className="pb-3 w-28 text-right">Thao Tác</th>
               </tr>
@@ -151,13 +216,21 @@ export default async function AdminJobsPage() {
               ) : (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-gray-500 font-light">
-                    Chưa có tin tuyển dụng nào được tạo.
+                    Chưa có tin tuyển dụng nào phù hợp với bộ lọc tìm kiếm.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        <AdminPagination
+          currentPage={page}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          limit={limit}
+        />
       </div>
     </div>
   )
