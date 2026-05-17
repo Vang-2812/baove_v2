@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { ArrowLeft, Save, FileText, Image, Globe, Tag } from 'lucide-react'
+import { ArrowLeft, Save, FileText, Image, Globe, Tag, Upload, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { upsertPost } from '../actions'
 
@@ -28,6 +28,41 @@ export function PostForm({ id, initialData, categories }: PostFormProps) {
   const [metaTitle, setMetaTitle] = React.useState(initialData?.meta_title || '')
   const [metaDesc, setMetaDesc] = React.useState(initialData?.meta_desc || '')
   const [tagsInput, setTagsInput] = React.useState(initialData?.tags?.join(', ') || '')
+
+  const [isUploading, setIsUploading] = React.useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('folder', 'posts')
+
+    try {
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (data.success) {
+        setThumbnail(data.url)
+      } else {
+        alert(data.error || 'Tải ảnh lên thất bại.')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Đã xảy ra lỗi khi tải ảnh lên.')
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   // Filter categories based on selected Type (BLOG vs DOCUMENT)
   const filteredCategories = categories.filter((cat) => cat.type === type)
@@ -260,13 +295,36 @@ export function PostForm({ id, initialData, categories }: PostFormProps) {
                   </h4>
 
                   <div className="space-y-3 font-light text-xs">
-                    <input
-                      type="text"
-                      placeholder="Nhập liên kết ảnh URL..."
-                      value={thumbnail}
-                      onChange={(e) => setThumbnail(e.target.value)}
-                      className="w-full bg-secondary-dark border border-white/5 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-primary/50"
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Nhập liên kết ảnh URL..."
+                        value={thumbnail}
+                        onChange={(e) => setThumbnail(e.target.value)}
+                        className="flex-1 bg-secondary-dark border border-white/5 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-primary/50"
+                      />
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        accept="image/*"
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleUploadClick}
+                        disabled={isUploading}
+                        className="flex items-center gap-1.5 px-3 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg border border-white/5 transition-all text-xs font-bold disabled:opacity-50 cursor-pointer"
+                        title="Tải ảnh lên từ máy tính"
+                      >
+                        {isUploading ? (
+                          <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
+                        ) : (
+                          <Upload className="w-3.5 h-3.5 text-primary" />
+                        )}
+                        <span>{isUploading ? 'Đang tải...' : 'Tải lên'}</span>
+                      </button>
+                    </div>
                     {thumbnail && (
                       <div className="relative aspect-video rounded-xl overflow-hidden bg-secondary-dark border border-white/5">
                         <img src={thumbnail} alt="Preview" className="object-cover w-full h-full" />

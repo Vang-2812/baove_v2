@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { ArrowLeft, Save, Sparkles, Plus, Trash2, HelpCircle, Shield } from 'lucide-react'
+import { ArrowLeft, Save, Sparkles, Plus, Trash2, HelpCircle, Shield, Upload, Loader2, Image } from 'lucide-react'
 import Link from 'next/link'
 import { upsertService } from '../actions'
 
@@ -38,6 +38,41 @@ export function ServiceForm({ id, initialData }: ServiceFormProps) {
   // Dynamic FAQs List [{q, a}]
   const parsedFaq = initialData?.faq ? JSON.parse(initialData.faq) : []
   const [faqs, setFaqs] = React.useState<any[]>(parsedFaq.length > 0 ? parsedFaq : [{ q: '', a: '' }])
+
+  const [isUploading, setIsUploading] = React.useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('folder', 'services')
+
+    try {
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (data.success) {
+        setImage(data.url)
+      } else {
+        alert(data.error || 'Tải ảnh lên thất bại.')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Đã xảy ra lỗi khi tải ảnh lên.')
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   // Auto-generate slug from title
   const handleTitleChange = (val: string) => {
@@ -231,14 +266,42 @@ export function ServiceForm({ id, initialData }: ServiceFormProps) {
 
               {/* Hình ảnh banner */}
               <div className="space-y-1.5 md:col-span-2">
-                <label className="text-xs font-bold text-gray-300">Ảnh đại diện / Banner (URL)</label>
-                <input
-                  type="text"
-                  placeholder="Nhập liên kết ảnh unsplash hoặc đường dẫn ảnh..."
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                  className="w-full bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all font-light"
-                />
+                <label className="text-xs font-bold text-gray-300">Ảnh đại diện / Banner</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Nhập liên kết ảnh URL..."
+                    value={image}
+                    onChange={(e) => setImage(e.target.value)}
+                    className="flex-1 bg-secondary-dark/60 border border-white/5 rounded-xl px-4 py-3 text-xs md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all font-light"
+                  />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleUploadClick}
+                    disabled={isUploading}
+                    className="flex items-center gap-1.5 px-4 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/5 transition-all text-xs font-bold disabled:opacity-50 cursor-pointer"
+                    title="Tải ảnh lên từ máy tính"
+                  >
+                    {isUploading ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
+                    ) : (
+                      <Upload className="w-3.5 h-3.5 text-primary" />
+                    )}
+                    <span>{isUploading ? 'Đang tải...' : 'Tải lên'}</span>
+                  </button>
+                </div>
+                {image && (
+                  <div className="mt-3 relative aspect-video max-w-md rounded-xl overflow-hidden bg-secondary-dark border border-white/5">
+                    <img src={image} alt="Preview" className="object-cover w-full h-full" />
+                  </div>
+                )}
               </div>
 
               {/* Icon name lucide */}
