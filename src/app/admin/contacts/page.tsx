@@ -63,7 +63,7 @@ export default function ContactsAdminPage() {
       const token = localStorage.getItem('adminAccessToken')
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '15',
+        limit: '7',
         status: statusFilter,
         search: searchQuery,
         sortBy,
@@ -355,7 +355,7 @@ export default function ContactsAdminPage() {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-white/5 font-sans">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/5 font-sans mt-4">
               <span className="text-xs text-gray-400 font-light">
                 Hiển thị trang <strong className="text-white font-bold">{page}</strong> trên <strong className="text-white font-bold">{totalPages}</strong> trang ({totalRecords} leads)
               </span>
@@ -363,14 +363,48 @@ export default function ContactsAdminPage() {
                 <button
                   disabled={page === 1}
                   onClick={() => setPage(page - 1)}
-                  className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                  className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
+                
+                {Array.from({ length: totalPages }, (_, idx) => {
+                  const pageNum = idx + 1
+                  const shouldShow =
+                    pageNum === 1 ||
+                    pageNum === totalPages ||
+                    Math.abs(pageNum - page) <= 1
+
+                  if (!shouldShow) {
+                    if (pageNum === 2 || pageNum === totalPages - 1) {
+                      return (
+                        <span key={`ellipse-${pageNum}`} className="text-gray-500 text-xs px-1 select-none">
+                          ...
+                        </span>
+                      )
+                    }
+                    return null
+                  }
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setPage(pageNum)}
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        page === pageNum
+                          ? 'bg-primary text-white shadow-md shadow-primary/25'
+                          : 'text-gray-400 hover:text-white bg-white/5 hover:bg-white/10'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                })}
+
                 <button
                   disabled={page === totalPages}
                   onClick={() => setPage(page + 1)}
-                  className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                  className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 text-gray-400 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

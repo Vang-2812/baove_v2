@@ -12,10 +12,20 @@ import {
   Eye,
   Settings,
 } from 'lucide-react'
+import { AdminPagination } from '@/components/ui/AdminPagination'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminDashboardPage() {
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function AdminDashboardPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams
+  const page = typeof resolvedParams.page === 'string' ? parseInt(resolvedParams.page, 10) : 1
+  const limit = 7
+  const skip = (page - 1) * limit
+
   const startOfToday = new Date()
   startOfToday.setHours(0, 0, 0, 0)
 
@@ -32,6 +42,7 @@ export default async function AdminDashboardPage() {
     newApplications,
     publishedPosts,
     recentContacts,
+    totalContacts,
   ] = await Promise.all([
     prisma.contact.count({
       where: {
@@ -54,12 +65,16 @@ export default async function AdminDashboardPage() {
       },
     }),
     prisma.contact.findMany({
-      take: 7,
+      skip,
+      take: limit,
       orderBy: {
         created_at: 'desc',
       },
     }),
+    prisma.contact.count(),
   ])
+
+  const totalPages = Math.ceil(totalContacts / limit)
 
   const stats = [
     {
@@ -223,6 +238,14 @@ export default async function AdminDashboardPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          <AdminPagination
+            currentPage={page}
+            totalPages={totalPages}
+            totalRecords={totalContacts}
+            limit={limit}
+          />
         </div>
 
         {/* Right: Quick Actions list */}
